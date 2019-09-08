@@ -1,7 +1,7 @@
 package tpcompiladores.lexer;
 
 public class LinesCounter implements CharactersObserver {
-    private long numberOfLines;
+    private long numberOfLines = 1;
 
     public long getCurrentLineNumber(){
         return this.numberOfLines;
