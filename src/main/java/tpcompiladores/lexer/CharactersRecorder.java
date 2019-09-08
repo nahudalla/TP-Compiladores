@@ -5,6 +5,7 @@ public class CharactersRecorder implements CharactersObserver {
     private String recording = new String();
 
     public void turnOn(){
+        this.recording = new String();
         this.isRecording = true;
     }
 
@@ -22,11 +23,6 @@ public class CharactersRecorder implements CharactersObserver {
 
     public String getRecordedString(){
         return this.recording;
-    }
-
-    public void reset(){
-        this.turnOff();
-        this.recording = new String();
     }
 
     @Override
