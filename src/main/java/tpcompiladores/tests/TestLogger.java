@@ -12,6 +12,5 @@ public class TestLogger {
         System.out.print("line:" + line); logger.logError("Lexico error");
         System.out.print("line:" + linesCounter.getCurrentLineNumber()); logger.logWarning("Truncated of text");
 
-
     }
 }
