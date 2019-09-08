@@ -10,6 +10,6 @@ public class LinesCounter implements CharactersObserver {
     @Override
     public void processReadCharacter(Character readCharacter) {
         if(readCharacter.equals('\n'))
-            numberOfLines += 1;
+            this.numberOfLines += 1;
     }
 }
