@@ -8,7 +8,7 @@ public class TestLogger {
         Logger logger = new Logger(linesCounter);
 
         System.out.print("Amount of lines without reading any characters: " + linesCounter.getCurrentLineNumber() + '\n');
-        logger.logError("Lexico error");
+        logger.logError("Constante entera fuera del rango permitido");
         logger.logWarning("Truncated of text");
 
     }

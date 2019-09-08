@@ -8,11 +8,11 @@ public class Logger {
     }
 
     public void logWarning(String message){
-        System.out.println(linesCounter.getCurrentLineNumber()+" "+  message);
+        System.out.println("Linea "+linesCounter.getCurrentLineNumber()+": "+  message);
     }
 
     public void logError(String message){
-        System.err.println(linesCounter.getCurrentLineNumber()+" "+ message);
+        System.err.println("Linea "+linesCounter.getCurrentLineNumber()+": "+ message);
     }
 
 }
