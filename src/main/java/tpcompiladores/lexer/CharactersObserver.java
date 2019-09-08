@@ -1,5 +1,5 @@
 package tpcompiladores.lexer;
 
 public interface CharactersObserver {
-    void processReadCharacter(Character);
+    void processReadCharacter(Character readCharacter);
 }
