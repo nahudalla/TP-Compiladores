@@ -9,7 +9,8 @@ public class LinesCounter implements CharactersObserver {
 
     @Override
     public void processReadCharacter(Character readCharacter) {
-        if(readCharacter.equals('\n'))
+        if(readCharacter.equals('\n')) {
             this.numberOfLines += 1;
+        }
     }
 }
