@@ -1,4 +1,4 @@
-package ar.edu.unicen.exa.alumnos.compiladores.tpcompiladores;
+package tpcompiladores.lexer;
 
 public interface SemanticAction{
     public void run(LexerContext lexerContext);
