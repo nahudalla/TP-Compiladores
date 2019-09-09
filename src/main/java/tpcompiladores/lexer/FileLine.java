@@ -11,7 +11,7 @@ public class FileLine {
     public Character getNextCharacter(){
         if(this.fileLine == null) return null;
 
-        if(index < this.fileLine.length()) {
+        if(this.index < this.fileLine.length()) {
             return this.fileLine.charAt(this.index++);
         } else{
             this.fileLine = null;
