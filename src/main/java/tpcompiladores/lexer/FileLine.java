@@ -9,17 +9,13 @@ public class FileLine {
     }
 
     public Character getNextCharacter(){
-        Character character;
-        if(fileLine != null) {
-            if(index < fileLine.length()) {
-                character = this.fileLine.charAt(index);
-                index++;
-            } else{
-                character = '\n';
-            }
-        } else {
-            return null;
+        if(this.fileLine == null) return null;
+
+        if(index < this.fileLine.length()) {
+            return this.fileLine.charAt(index++);
+        } else{
+            this.fileLine = null;
+            return '\n';
         }
-        return character;
     }
 }
