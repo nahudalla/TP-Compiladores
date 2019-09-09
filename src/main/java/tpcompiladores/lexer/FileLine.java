@@ -12,7 +12,7 @@ public class FileLine {
         if(this.fileLine == null) return null;
 
         if(index < this.fileLine.length()) {
-            return this.fileLine.charAt(index++);
+            return this.fileLine.charAt(this.index++);
         } else{
             this.fileLine = null;
             return '\n';
