@@ -3,13 +3,13 @@ package tpcompiladores.lexer;
 import java.util.Map;
 
 public class LexerContext {
-   private CharactersRecorder charactersRecorder;
-   private CharactersReader charactersReader;
-   private Lexer lexer;
-   private Map<String,Integer> reservedWordsTable;
-   private Map<String,Integer> specialTokensTable;
-   private Map<String, SymbolTableEntry>  symbolsTable;
-   private Logger logger;
+    private CharactersRecorder charactersRecorder;
+    private CharactersReader charactersReader;
+    private Lexer lexer;
+    private Map<String,Integer> reservedWordsTable;
+    private Map<String,Integer> specialTokensTable;
+    private Map<String, SymbolTableEntry>  symbolsTable;
+    private Logger logger;
 
     public CharactersRecorder getCharactersRecorder() {
         return this.charactersRecorder;
@@ -52,7 +52,7 @@ public class LexerContext {
     }
 
     public Map<String, SymbolTableEntry> getSymbolsTable() {
-        return symbolsTable;
+        return this.symbolsTable;
     }
 
     public void setSymbolsTable(Map<String, SymbolTableEntry> symbolsTable) {
