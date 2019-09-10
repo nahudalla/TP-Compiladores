@@ -8,12 +8,12 @@ public class FileLine {
         this.fileLine = fileLine;
     }
 
-    public Character getNextCharacter(){
+    public Character getNextCharacter() {
         if(this.fileLine == null) return null;
 
         if(this.index < this.fileLine.length()) {
             return this.fileLine.charAt(this.index++);
-        } else{
+        } else {
             this.fileLine = null;
             return '\n';
         }
