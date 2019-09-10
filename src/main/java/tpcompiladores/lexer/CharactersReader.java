@@ -18,7 +18,7 @@ public class CharactersReader {
     }
 
     private boolean readNewLine() throws IOException {
-        String line = bufferedReader.readLine();
+        String line = this.bufferedReader.readLine();
 
         if(line == null) return false;
 
@@ -28,7 +28,7 @@ public class CharactersReader {
     }
 
     private void notifyCharacterRead(Character readCharacter){
-        for(CharactersObserver subscriber: this.subscribers) {
+        for(CharactersObserver subscriber : this.subscribers) {
             subscriber.processReadCharacter(readCharacter);
         }
     }
@@ -48,8 +48,8 @@ public class CharactersReader {
     public Character getNextCharacter() throws IOException {
         if (this.unGetCalled) {
             this.unGetCalled = false;
-            this.notifyCharacterRead(this.getLastReadCharacter());
-            return getLastReadCharacter();
+
+            return this.getLastReadCharacter();
         }
 
         this.lastReadCharacter = this.fileLine.getNextCharacter();
@@ -60,7 +60,8 @@ public class CharactersReader {
             this.lastReadCharacter = this.fileLine.getNextCharacter();
         }
 
-        this.notifyCharacterRead(lastReadCharacter);
+        this.notifyCharacterRead(this.lastReadCharacter);
+
         return this.lastReadCharacter;
     }
 }
