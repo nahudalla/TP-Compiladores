@@ -1,15 +1,11 @@
 package tpcompiladores.lexer;
 
-
-import java.util.ArrayList;
-import java.util.List;
-
 public class StateMachine {
     private int currentState = 0;
     private StateTransition[][] transitionMatrix;
-    private List<CharacterFilter> characterClasses = new ArrayList<>();
+    private CharacterFilter[] characterClasses;
 
-    public StateMachine (StateTransition[][] transitionMatrix, List characterClasses) {
+    public StateMachine (StateTransition[][] transitionMatrix, CharacterFilter[] characterClasses) {
         this.transitionMatrix = transitionMatrix;
         this.characterClasses = characterClasses;
     }
@@ -19,17 +15,25 @@ public class StateMachine {
     }
 
     public void performTransition(Character readCharacter, LexerContext lexerContext) {
-        boolean matchedClass = false;
-        int characterClass = -1;
+        int characterClass = this.getCharacterClass(readCharacter, lexerContext);
 
-        for(int i = 0; i < this.characterClasses.size() && !matchedClass; i++) {
-            if (this.characterClasses.get(i).matches(readCharacter)){
-                matchedClass = true;
-                characterClass = i;
+        if (characterClass == -1) return;
+
+        StateTransition stateTransition = this.transitionMatrix[this.currentState][characterClass];
+
+        stateTransition.getSemanticAction().run(lexerContext);
+        this.currentState = stateTransition.getNextState();
+    }
+
+    private int getCharacterClass (Character readCharacter, LexerContext lexerContext) {
+        for(int i = 0; i < this.characterClasses.length; i++) {
+            if (this.characterClasses[i].matches(readCharacter)){
+                return i;
             }
         }
 
-        this.transitionMatrix[this.currentState][characterClass].getSemanticAction().run(lexerContext);
-        this.currentState = this.transitionMatrix[this.currentState][characterClass].getNextState();
+        lexerContext.getLogger().logError("Caracter no esperado: " + readCharacter);
+
+        return -1;
     }
 }

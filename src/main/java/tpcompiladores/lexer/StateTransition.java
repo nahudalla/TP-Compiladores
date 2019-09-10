@@ -10,10 +10,10 @@ public class StateTransition {
     }
 
     public int getNextState() {
-        return nextState;
+        return this.nextState;
     }
 
     public SemanticAction getSemanticAction() {
-        return semanticAction;
+        return this.semanticAction;
     }
 }
