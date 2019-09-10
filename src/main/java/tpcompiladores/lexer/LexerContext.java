@@ -1,49 +1,69 @@
 package tpcompiladores.lexer;
 
-import sun.text.normalizer.SymbolTable;
-
 import java.util.Map;
 
 public class LexerContext {
-    CharactersRecorder charactersRecorder;
-    CharactersReader charactersReader;
-    Lexer lexer;
-    Map<String,Integer> reservedWordsTable;
-    Map<String,Integer> specialTokensTable;
-    Map<String, SymbolTableEntry>  symbolsTable;
-    Logger logger;
+   private CharactersRecorder charactersRecorder;
+   private CharactersReader charactersReader;
+   private Lexer lexer;
+   private Map<String,Integer> reservedWordsTable;
+   private Map<String,Integer> specialTokensTable;
+   private Map<String, SymbolTableEntry>  symbolsTable;
+   private Logger logger;
 
-    public LexerContext(CharactersRecorder charactersRecorder, Logger logger){
-        this.charactersRecorder=charactersRecorder;
-        this.logger=logger;
-    }
-
-    CharactersRecorder getCharacterRecorder(){
+    public CharactersRecorder getCharactersRecorder() {
         return this.charactersRecorder;
     }
 
-    CharactersReader getCharactersReader(){
+    public void setCharactersRecorder(CharactersRecorder charactersRecorder) {
+        this.charactersRecorder = charactersRecorder;
+    }
+
+    public CharactersReader getCharactersReader() {
         return this.charactersReader;
     }
 
-    Lexer getLexer(){
+    public void setCharactersReader(CharactersReader charactersReader) {
+        this.charactersReader = charactersReader;
+    }
+
+    public Lexer getLexer() {
         return this.lexer;
     }
 
-    Map<String,Integer> getReservedWordStable(){
+    public void setLexer(Lexer lexer) {
+        this.lexer = lexer;
+    }
+
+    public Map<String, Integer> getReservedWordsTable() {
         return this.reservedWordsTable;
     }
 
-   Logger getLogger(){
-        return this.logger;
-   }
+    public void setReservedWordsTable(Map<String, Integer> reservedWordsTable) {
+        this.reservedWordsTable = reservedWordsTable;
+    }
 
-   Map<String,Integer> getSpecialTokensTable(){
+    public Map<String, Integer> getSpecialTokensTable() {
         return this.specialTokensTable;
-   }
+    }
 
-   Map<String,SymbolTableEntry> getSymbolsTable(){
-        return this.symbolsTable;
-   }
+    public void setSpecialTokensTable(Map<String, Integer> specialTokensTable) {
+        this.specialTokensTable = specialTokensTable;
+    }
 
+    public Map<String, SymbolTableEntry> getSymbolsTable() {
+        return symbolsTable;
+    }
+
+    public void setSymbolsTable(Map<String, SymbolTableEntry> symbolsTable) {
+        this.symbolsTable = symbolsTable;
+    }
+
+    public Logger getLogger() {
+        return this.logger;
+    }
+
+    public void setLogger(Logger logger) {
+        this.logger = logger;
+    }
 }
