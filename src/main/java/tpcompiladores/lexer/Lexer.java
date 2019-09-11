@@ -1,14 +1,10 @@
 package tpcompiladores.lexer;
 
 public class Lexer {
-    private int nextToken;
+    private Integer nextToken;
 
-    public Lexer(int nextToken) {
-        this.nextToken = nextToken;
-    }
-
-    public int getNextToken() {
-        return nextToken;
+    public Integer getNextToken() {
+        return this.nextToken;
     }
 
     public void setNextToken(int nextToken) {
