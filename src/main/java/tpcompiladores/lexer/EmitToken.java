@@ -1,15 +1,18 @@
 package tpcompiladores.lexer;
 
-public class EmitToken {
-    Integer number;
-    Lexer element;
+public class EmitToken implements SemanticAction{
+    private int token;
 
-    public  EmitToken(Lexer elementLexer){
-        this.number = elementLexer.getNextToken();
-        this.element = elementLexer;
+    public  EmitToken(int token){
+        this.token = token;
     }
 
     protected Integer getToken() {
-        return this.number;
+        return this.token;
+    }
+
+    @Override
+    public void run(LexerContext lexerContext) {
+        lexerContext.getLexer().setNextToken(this.token);
     }
 }

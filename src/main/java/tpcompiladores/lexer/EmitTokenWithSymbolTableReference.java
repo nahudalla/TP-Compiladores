@@ -1,13 +1,14 @@
 package tpcompiladores.lexer;
 
-public class EmitTokenWithSymbolTableReference extends  EmitToken implements SemanticAction{
-    EmitToken emitToken;
-    public EmitTokenWithSymbolTableReference(Lexer elementLexer) {
-        super(elementLexer);
+public class EmitTokenWithSymbolTableReference extends EmitToken {
+    String keyToken;
+    public EmitTokenWithSymbolTableReference(int valueToken, String keyToken) {
+        super(valueToken);
+        this.keyToken = keyToken;
     }
 
     @Override
     public void run(LexerContext lexerContext) {
-        lexerContext.getLexer().setNextToken(emitToken.getToken());
+        lexerContext.getLexer().setNextToken(super.getToken());
     }
 }
