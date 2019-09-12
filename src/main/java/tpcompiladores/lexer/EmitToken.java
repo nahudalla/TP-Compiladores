@@ -1,9 +1,9 @@
 package tpcompiladores.lexer;
 
-public class EmitToken implements SemanticAction{
+public class EmitToken implements SemanticAction {
     private int token;
 
-    public  EmitToken(int token){
+    public EmitToken(int token) {
         this.token = token;
     }
 

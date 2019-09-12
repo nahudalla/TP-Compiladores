@@ -1,14 +1,15 @@
 package tpcompiladores.lexer;
 
 public class EmitTokenWithSymbolTableReference extends EmitToken {
-    String keyToken;
-    public EmitTokenWithSymbolTableReference(int valueToken, String keyToken) {
+    private String reference;
+
+    public EmitTokenWithSymbolTableReference(int valueToken, String reference) {
         super(valueToken);
-        this.keyToken = keyToken;
+        this.reference = reference;
     }
 
     @Override
     public void run(LexerContext lexerContext) {
-        lexerContext.getLexer().setNextToken(super.getToken());
+        lexerContext.getLexer().setNextToken(super.getToken(), this.reference);
     }
 }
