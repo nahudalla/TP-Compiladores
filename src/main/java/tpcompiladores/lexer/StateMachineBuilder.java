@@ -2,26 +2,28 @@ package tpcompiladores.lexer;
 
 public class StateMachineBuilder {
     private int currentCharacterClass = 0;
-    private CharacterFilter[] characterClasses;
+    private CharacterFilter[] characterFilters;
     private StateTransition[][] stateTransitionMatrix;
 
-    public StateMachineBuilder(int states, int numberOfCharacterClasses) {
-        this.stateTransitionMatrix = new StateTransition[states][numberOfCharacterClasses];
-        this.characterClasses = new CharacterFilter[numberOfCharacterClasses];
+    public StateMachineBuilder(int numberOfStates, int numberOfCharacterClasses) {
+        this.stateTransitionMatrix = new StateTransition[numberOfStates][numberOfCharacterClasses];
+        this.characterFilters = new CharacterFilter[numberOfCharacterClasses];
     }
 
-    public int getStates() {
+    private int getNumberOfStates() {
         return this.stateTransitionMatrix.length;
     }
 
-    public int getCharacterClasses() {
+    private int getNumberOfCharacterClasses() {
         return this.stateTransitionMatrix[0].length;
     }
 
     public int addCharacterClass(CharacterFilter characterClass) {
-        if (this.currentCharacterClass >= this.getCharacterClasses()) return -1;
+        if (this.currentCharacterClass >= this.getNumberOfCharacterClasses()) {
+            throw new IndexOutOfBoundsException("Se intentaron crear mas clases de las definidas inicialmente");
+        }
 
-        this.characterClasses[this.currentCharacterClass] = characterClass;
+        this.characterFilters[this.currentCharacterClass] = characterClass;
 
         return this.currentCharacterClass++;
     }
@@ -31,7 +33,11 @@ public class StateMachineBuilder {
     }
 
     public void addDefaultTransition(int startState, StateTransition defaultTransition) {
-        for(int i = 0; i < this.stateTransitionMatrix[startState].length; i++) {
+        if (startState >= this.getNumberOfStates() || startState < 0) {
+            throw new IndexOutOfBoundsException("Se intentó usar un estado fuera del rango definido inicialmente");
+        }
+
+        for(int i = 0; i < this.getNumberOfCharacterClasses(); i++) {
             if (this.stateTransitionMatrix[startState][i] == null) {
                 this.stateTransitionMatrix[startState][i] = defaultTransition;
             }
@@ -39,6 +45,6 @@ public class StateMachineBuilder {
     }
 
     public StateMachine build() {
-        return new StateMachine(this.stateTransitionMatrix, this.characterClasses);
+        return new StateMachine(this.stateTransitionMatrix, this.characterFilters);
     }
 }
