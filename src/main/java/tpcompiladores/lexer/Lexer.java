@@ -11,7 +11,7 @@ public class Lexer {
         this.nextToken = nextToken;
     }
 
-    public void setNextToken(int nextToken, String keyToken){
+    public void setNextToken(int nextToken, String symbolsTableReference){
         this.nextToken = nextToken;
     }
 }
