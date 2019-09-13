@@ -8,7 +8,8 @@ public class LexerContext {
     private Lexer lexer;
     private Map<String,Integer> reservedWordsTable;
     private Map<String,Integer> specialTokensTable;
-    private Map<String, SymbolTableEntry>  symbolsTable;
+    private Map<String, SymbolTableEntry> symbolsTable;
+    private Map<String, SymbolTableEntry> constantsTable;
     private Logger logger;
 
     public CharactersRecorder getCharactersRecorder() {
@@ -65,5 +66,13 @@ public class LexerContext {
 
     public void setLogger(Logger logger) {
         this.logger = logger;
+    }
+
+    public Map<String, SymbolTableEntry> getConstantsTable() {
+        return this.constantsTable;
+    }
+
+    public void setConstantsTable(Map<String, SymbolTableEntry> constantsTable) {
+        this.constantsTable = constantsTable;
     }
 }
