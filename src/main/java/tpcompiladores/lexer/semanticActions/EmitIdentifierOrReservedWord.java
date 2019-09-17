@@ -54,6 +54,7 @@ public class EmitIdentifierOrReservedWord implements SemanticAction {
     private void emitIdentifier () {
         this.lexerContext.getLexer().setNextToken(
                 TokenNumbers.ID,
-                this.word);
+                this.word
+        );
     }
 }

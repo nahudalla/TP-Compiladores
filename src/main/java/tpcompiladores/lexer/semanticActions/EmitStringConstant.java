@@ -38,6 +38,7 @@ public class EmitStringConstant implements SemanticAction {
     private void emitConstantString() {
         this.lexerContext.getLexer().setNextToken(
                 TokenNumbers.CONST_STRING,
-                this.stringConstant);
+                this.stringConstant
+        );
     }
 }
