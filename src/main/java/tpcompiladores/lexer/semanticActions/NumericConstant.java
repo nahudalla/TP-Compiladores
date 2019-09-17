@@ -9,28 +9,27 @@ public class NumericConstant implements SemanticAction {
 
     @Override
     public void run(LexerContext lexerContext) {
-       Integer constant = Integer.getInteger(lexerContext.getCharactersRecorder().getRecordedString());
+        String recordedString = lexerContext.getCharactersRecorder().getRecordedString();
+       Long constant = Long.getLong(recordedString);
 
-       if ((constant > Math.pow(2,31) * -1) && (constant < Math.pow(2,31) -1)) {
-           String constant_string = lexerContext.getCharactersRecorder().getRecordedString();
-           lexerContext.getLexer().setNextToken(TokenNumbers.CONST_LONG,constant_string);
-           SymbolTableEntry symbolTableEntry = new SymbolTableEntry();
-           symbolTableEntry.setLexeme(constant_string);
-           lexerContext.getConstantsTable().put(constant_string,symbolTableEntry);
-       }
-       else
-         this.processConstantInt(lexerContext,constant);
+       if ((constant > 0) && ( constant < Math.pow(2,15) -1 )) {
+               String constant_string = lexerContext.getCharactersRecorder().getRecordedString();
+               SymbolTableEntry symbolTableEntry = new SymbolTableEntry();
+               symbolTableEntry.setLexeme(constant_string);
+               lexerContext.getConstantsTable().put(constant_string,symbolTableEntry);
+               lexerContext.getLexer().setNextToken(TokenNumbers.MAX_INT,constant_string);
+           }
+       else {this.processLongInt(lexerContext,constant);}
     }
 
-    private void processConstantInt(LexerContext lexerContext, Integer constant){
-        if ((constant > Math.pow(2,15) * -1) && ( constant < Math.pow(2,15) -1 )) {
+    private void processLongInt(LexerContext lexerContext, Long constant){
+        if  (constant < Math.pow(2,31) -1) {
             String constant_string = lexerContext.getCharactersRecorder().getRecordedString();
-            lexerContext.getLexer().setNextToken(TokenNumbers.CONST_INT,constant_string);
             SymbolTableEntry symbolTableEntry = new SymbolTableEntry();
             symbolTableEntry.setLexeme(constant_string);
-            lexerContext.getConstantsTable().put(constant_string,symbolTableEntry);
+            lexerContext.getConstantsTable().put(constant_string, symbolTableEntry);
+            lexerContext.getLexer().setNextToken(TokenNumbers.MAX_LONG, constant_string);
         }
-        else
-            lexerContext.getLogger().logError("Constante fuera de rango");
+        else {lexerContext.getLogger().logError("Constante fuera de rango"); }
     }
 }
