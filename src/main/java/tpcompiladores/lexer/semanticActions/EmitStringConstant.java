@@ -14,12 +14,18 @@ public class EmitStringConstant implements SemanticAction {
         this.lexerContext = lexerContext;
         this.stringConstant = this.lexerContext.getCharactersRecorder().getRecordedString();
 
-        this.addToConstantsTable(this.stringConstant);
+        if(!this.isConstantInConstantsTable()) {
+            this.addToConstantsTable();
+        }
 
         this.emitConstantString();
     }
 
-    private void addToConstantsTable(String stringConstant) {
+    private boolean isConstantInConstantsTable() {
+        return this.lexerContext.getConstantsTable().containsKey(this.stringConstant);
+    }
+
+    private void addToConstantsTable() {
         SymbolTableEntry symbolTableEntry = new SymbolTableEntry();
         symbolTableEntry.setLexeme(this.stringConstant);
 
@@ -30,6 +36,8 @@ public class EmitStringConstant implements SemanticAction {
     }
 
     private void emitConstantString() {
-        this.lexerContext.getLexer().setNextToken(TokenNumbers.CONST_STRING,this.stringConstant);
+        this.lexerContext.getLexer().setNextToken(
+                TokenNumbers.CONST_STRING,
+                this.stringConstant);
     }
 }
