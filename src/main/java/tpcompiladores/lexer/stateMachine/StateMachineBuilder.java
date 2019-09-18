@@ -1,4 +1,6 @@
-package tpcompiladores.lexer;
+package tpcompiladores.lexer.stateMachine;
+
+import tpcompiladores.lexer.CharacterFilter;
 
 public class StateMachineBuilder {
     private int currentCharacterClass = 0;

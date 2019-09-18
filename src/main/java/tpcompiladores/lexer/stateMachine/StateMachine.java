@@ -1,4 +1,7 @@
-package tpcompiladores.lexer;
+package tpcompiladores.lexer.stateMachine;
+
+import tpcompiladores.lexer.CharacterFilter;
+import tpcompiladores.lexer.LexerContext;
 
 public class StateMachine {
     private int currentState = 0;

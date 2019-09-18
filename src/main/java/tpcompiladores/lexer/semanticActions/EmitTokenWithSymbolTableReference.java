@@ -1,4 +1,6 @@
-package tpcompiladores.lexer;
+package tpcompiladores.lexer.semanticActions;
+
+import tpcompiladores.lexer.LexerContext;
 
 public class EmitTokenWithSymbolTableReference extends EmitToken {
     private String reference;

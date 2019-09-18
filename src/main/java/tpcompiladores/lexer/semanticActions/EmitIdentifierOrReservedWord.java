@@ -1,7 +1,6 @@
 package tpcompiladores.lexer.semanticActions;
 
 import tpcompiladores.lexer.LexerContext;
-import tpcompiladores.lexer.SemanticAction;
 import tpcompiladores.lexer.SymbolTableEntry;
 import tpcompiladores.lexer.TokenNumbers;
 

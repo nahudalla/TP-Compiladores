@@ -1,7 +1,6 @@
 package tpcompiladores.lexer.semanticActions;
 
 import tpcompiladores.lexer.LexerContext;
-import tpcompiladores.lexer.SemanticAction;
 
 public class EmitWarning implements SemanticAction {
     private String message;

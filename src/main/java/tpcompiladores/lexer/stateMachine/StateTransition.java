@@ -1,4 +1,6 @@
-package tpcompiladores.lexer;
+package tpcompiladores.lexer.stateMachine;
+
+import tpcompiladores.lexer.semanticActions.SemanticAction;
 
 public class StateTransition {
     private int nextState = 0;

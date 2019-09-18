@@ -1,4 +1,6 @@
-package tpcompiladores.lexer;
+package tpcompiladores.lexer.semanticActions;
+
+import tpcompiladores.lexer.LexerContext;
 
 public class EmitToken implements SemanticAction {
     private int token;

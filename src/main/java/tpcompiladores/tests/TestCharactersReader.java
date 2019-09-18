@@ -1,12 +1,11 @@
 package tpcompiladores.tests;
 
 import tpcompiladores.FileChooser;
-import tpcompiladores.lexer.CharactersReader;
+import tpcompiladores.lexer.fileInput.CharactersReader;
 import tpcompiladores.lexer.CharactersRecorder;
 import tpcompiladores.lexer.LinesCounter;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class TestCharactersReader {

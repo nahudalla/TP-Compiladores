@@ -1,8 +1,7 @@
 package tpcompiladores.lexer.semanticActions;
 
-import tpcompiladores.lexer.CharactersReader;
+import tpcompiladores.lexer.fileInput.CharactersReader;
 import tpcompiladores.lexer.LexerContext;
-import tpcompiladores.lexer.SemanticAction;
 
 public class EmitInvalidCharacterError implements SemanticAction {
     @Override

@@ -1,6 +1,6 @@
 package tpcompiladores.tests;
 
-import tpcompiladores.lexer.FileLine;
+import tpcompiladores.lexer.fileInput.FileLine;
 
 public class TestFileLine {
     public static void main(String args[]){

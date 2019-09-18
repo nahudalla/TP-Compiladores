@@ -1,6 +1,8 @@
-package tpcompiladores.lexer;
+package tpcompiladores.lexer.semanticActions;
 
-public class ComposedSemanticAction implements SemanticAction{
+import tpcompiladores.lexer.LexerContext;
+
+public class ComposedSemanticAction implements SemanticAction {
     private SemanticAction semanticActionA;
     private SemanticAction semanticActionB;
 
