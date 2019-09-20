@@ -1,4 +1,6 @@
-package tpcompiladores.lexer;
+package tpcompiladores.lexer.fileInput;
+
+import tpcompiladores.lexer.CharactersObserver;
 
 import java.io.*;
 import java.util.ArrayList;

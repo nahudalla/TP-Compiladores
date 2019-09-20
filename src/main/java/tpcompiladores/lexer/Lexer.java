@@ -1,5 +1,10 @@
 package tpcompiladores.lexer;
 
+import tpcompiladores.Logger;
+import tpcompiladores.lexer.fileInput.CharactersReader;
+import tpcompiladores.lexer.stateMachine.StateMachine;
+
+import java.io.File;
 import java.io.IOException;
 
 public class Lexer {
@@ -29,5 +34,22 @@ public class Lexer {
 
     public void setNextToken(int nextToken, String symbolsTableReference){
         this.setNextToken(nextToken);
+    }
+
+    public static LexerContext createContext (File sourceFile) throws IOException {
+        LexerContext context = new LexerContext();
+
+        context.setCharactersReader(new CharactersReader(sourceFile));
+        Lexer.setupLogger(context);
+
+        return context;
+    }
+
+    private static void setupLogger (LexerContext context) {
+        LinesCounter linesCounter = new LinesCounter();
+
+        context.getCharactersReader().subscribeToCharacters(linesCounter);
+
+        context.setLogger(new Logger(linesCounter));
     }
 }

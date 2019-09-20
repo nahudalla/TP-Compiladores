@@ -1,4 +1,4 @@
-package tpcompiladores.lexer;
+package tpcompiladores.lexer.fileInput;
 
 public class FileLine {
     private String fileLine = null;

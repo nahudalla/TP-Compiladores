@@ -1,5 +1,6 @@
 package tpcompiladores.tests;
 
+import tpcompiladores.Logger;
 import tpcompiladores.lexer.*;
 
 public class TestLogger {

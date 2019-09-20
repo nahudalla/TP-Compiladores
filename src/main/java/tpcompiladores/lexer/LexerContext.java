@@ -1,5 +1,8 @@
 package tpcompiladores.lexer;
 
+import tpcompiladores.Logger;
+import tpcompiladores.lexer.fileInput.CharactersReader;
+
 import java.util.Map;
 
 public class LexerContext {
