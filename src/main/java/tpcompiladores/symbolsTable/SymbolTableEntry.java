@@ -1,4 +1,4 @@
-package tpcompiladores.lexer;
+package tpcompiladores.symbolsTable;
 
 public class SymbolTableEntry {
     private String lexeme;

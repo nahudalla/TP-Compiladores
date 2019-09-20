@@ -1,59 +1,40 @@
 package tpcompiladores.lexer.semanticActions;
 
+import tpcompiladores.CompilerConstants;
 import tpcompiladores.lexer.LexerContext;
-import tpcompiladores.lexer.SymbolTableEntry;
+import tpcompiladores.symbolsTable.SymbolTableEntry;
 import tpcompiladores.lexer.TokenNumbers;
 
 public class EmitIdentifierOrReservedWord implements SemanticAction {
-    private String word;
-    private LexerContext lexerContext;
-
     @Override
     public void run(LexerContext lexerContext) {
-        this.word = lexerContext.getCharactersRecorder().getRecordedString();
-        this.lexerContext = lexerContext;
+        String identifier = this.truncateIdentifierIfNecessary(
+                lexerContext,
+                lexerContext.getCharactersRecorder().getRecordedString()
+        );
 
-        Integer reservedWordToken = lexerContext.getReservedWordsTable().get(this.word);
-
-        if (reservedWordToken != null) {
-            lexerContext.getLexer().setNextToken(reservedWordToken);
-        } else {
-            this.truncateWordIfNecessary();
-
-            if (!this.isIdentifierInSymbolsTable()) this.addIdentifierToSymbolsTable();
-
-            this.emitIdentifier();
-        }
+        String key = this.addIdentifierToSymbolsTable(lexerContext, identifier);
+        lexerContext.getLexer().setNextToken(TokenNumbers.ID, key);
     }
 
-    private void truncateWordIfNecessary () {
-        if (this.word.length() > 25){
-            String newWord = this.word.subSequence(0,24).toString();
-            this.lexerContext.getLogger().logWarning(
-                    "Identificador truncado ("+newWord+"): "+this.word
+    private String truncateIdentifierIfNecessary (LexerContext lexerContext, String identifier) {
+        if (identifier.length() > CompilerConstants.MAX_ID_LENGTH){
+            String newIdentifier = identifier.substring(0, CompilerConstants.MAX_ID_LENGTH);
+
+            lexerContext.getLogger().logWarning(
+                    "Identificador truncado ("+newIdentifier+"): "+identifier
             );
-            this.word = newWord;
+
+            return newIdentifier;
         }
+
+        return identifier;
     }
 
-    private boolean isIdentifierInSymbolsTable () {
-        return this.lexerContext.getSymbolsTable().containsKey(this.word);
-    }
-
-    private void addIdentifierToSymbolsTable () {
+    private String addIdentifierToSymbolsTable (LexerContext lexerContext, String identifier) {
         SymbolTableEntry symbolTableEntry = new SymbolTableEntry();
-        symbolTableEntry.setLexeme(this.word);
+        symbolTableEntry.setLexeme(identifier);
 
-        this.lexerContext.getSymbolsTable().put(
-                this.word,
-                symbolTableEntry
-        );
-    }
-
-    private void emitIdentifier () {
-        this.lexerContext.getLexer().setNextToken(
-                TokenNumbers.ID,
-                this.word
-        );
+        return lexerContext.getSymbolsTable().addIdentifier(symbolTableEntry);
     }
 }

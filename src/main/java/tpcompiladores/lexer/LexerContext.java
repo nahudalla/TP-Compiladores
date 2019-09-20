@@ -2,6 +2,8 @@ package tpcompiladores.lexer;
 
 import tpcompiladores.Logger;
 import tpcompiladores.lexer.fileInput.CharactersReader;
+import tpcompiladores.symbolsTable.SymbolTableEntry;
+import tpcompiladores.symbolsTable.SymbolsTable;
 
 import java.util.Map;
 
@@ -11,8 +13,7 @@ public class LexerContext {
     private Lexer lexer;
     private Map<String,Integer> reservedWordsTable;
     private Map<String,Integer> specialTokensTable;
-    private Map<String, SymbolTableEntry> symbolsTable;
-    private Map<String, SymbolTableEntry> constantsTable;
+    private SymbolsTable symbolsTable;
     private Logger logger;
 
     public CharactersRecorder getCharactersRecorder() {
@@ -21,6 +22,14 @@ public class LexerContext {
 
     public void setCharactersRecorder(CharactersRecorder charactersRecorder) {
         this.charactersRecorder = charactersRecorder;
+    }
+
+    public SymbolsTable getSymbolsTable() {
+        return this.symbolsTable;
+    }
+
+    public void setSymbolsTable(SymbolsTable symbolsTable) {
+        this.symbolsTable = symbolsTable;
     }
 
     public CharactersReader getCharactersReader() {
@@ -55,27 +64,11 @@ public class LexerContext {
         this.specialTokensTable = specialTokensTable;
     }
 
-    public Map<String, SymbolTableEntry> getSymbolsTable() {
-        return this.symbolsTable;
-    }
-
-    public void setSymbolsTable(Map<String, SymbolTableEntry> symbolsTable) {
-        this.symbolsTable = symbolsTable;
-    }
-
     public Logger getLogger() {
         return this.logger;
     }
 
     public void setLogger(Logger logger) {
         this.logger = logger;
-    }
-
-    public Map<String, SymbolTableEntry> getConstantsTable() {
-        return this.constantsTable;
-    }
-
-    public void setConstantsTable(Map<String, SymbolTableEntry> constantsTable) {
-        this.constantsTable = constantsTable;
     }
 }
