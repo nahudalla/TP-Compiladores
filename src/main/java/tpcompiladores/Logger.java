@@ -20,6 +20,6 @@ public class Logger {
     }
 
     public boolean hasEmittedErrors() {
-        return hasEmittedErrors;
+        return this.hasEmittedErrors;
     }
 }
