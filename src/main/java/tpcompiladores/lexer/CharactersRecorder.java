@@ -3,9 +3,10 @@ package tpcompiladores.lexer;
 public class CharactersRecorder implements CharactersObserver {
     private boolean isRecording = false;
     private String recording = "";
+    private Character lastReadCharacter = null;
 
     public void turnOn(){
-        this.recording = "";
+        this.recording = String.valueOf(this.lastReadCharacter);
         this.isRecording = true;
     }
 
@@ -27,6 +28,8 @@ public class CharactersRecorder implements CharactersObserver {
 
     @Override
     public void processReadCharacter(Character readCharacter) {
+        this.lastReadCharacter = readCharacter;
+
         if(this.isRecording){
             this.recording = this.recording.concat(readCharacter.toString());
         }
