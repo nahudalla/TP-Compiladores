@@ -12,7 +12,6 @@ public class LexerContext {
     private CharactersReader charactersReader;
     private Lexer lexer;
     private Map<String,Integer> reservedWordsTable;
-    private Map<String,Integer> specialTokensTable;
     private SymbolsTable symbolsTable;
     private Logger logger;
 
@@ -54,14 +53,6 @@ public class LexerContext {
 
     public void setReservedWordsTable(Map<String, Integer> reservedWordsTable) {
         this.reservedWordsTable = reservedWordsTable;
-    }
-
-    public Map<String, Integer> getSpecialTokensTable() {
-        return this.specialTokensTable;
-    }
-
-    public void setSpecialTokensTable(Map<String, Integer> specialTokensTable) {
-        this.specialTokensTable = specialTokensTable;
     }
 
     public Logger getLogger() {
