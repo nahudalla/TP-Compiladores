@@ -2,6 +2,7 @@ package tpcompiladores;
 
 import tpcompiladores.lexer.Lexer;
 import tpcompiladores.lexer.LexerContext;
+import tpcompiladores.lexer.TokenNumbers;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,8 +15,21 @@ public class Main {
         LexerContext context = Main.createContext(sourceFile);
 
         // Aca va el codigo para ejecutar el compilador
+        Main.consumeTokens(context);
 
         Main.setExitCodeIfErrorsEmitted(context);
+    }
+
+    private static void consumeTokens (LexerContext lexerContext) {
+        int token, num = 1;
+        do {
+            try {
+                token = lexerContext.getLexer().getNextToken();
+            } catch (IOException e) {
+                e.printStackTrace();
+                token = TokenNumbers.EOF;
+            }
+        } while (token != TokenNumbers.EOF);
     }
 
     private static File askForSourceFile () {

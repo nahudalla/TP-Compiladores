@@ -17,13 +17,15 @@ public class Lexer {
         this.lexerContext = lexerContext;
     }
 
-    public Integer getNextToken() throws IOException {
+    public int getNextToken() throws IOException {
         this.nextToken = null;
 
         while(this.nextToken == null){
             Character readCharacter = this.lexerContext.getCharactersReader().getNextCharacter();
             this.stateMachine.performTransition(readCharacter, this.lexerContext);
         }
+
+        this.lexerContext.getLogger().logRecognizedToken(this.nextToken);
 
         return this.nextToken;
     }
@@ -38,9 +40,9 @@ public class Lexer {
 
     public static LexerContext createContext (File sourceFile) throws IOException {
         LexerContext context = new LexerContext();
-
         context.setCharactersReader(new CharactersReader(sourceFile));
         Lexer.setupLogger(context);
+        Lexer.setupLexer(context);
 
         return context;
     }
@@ -51,5 +53,14 @@ public class Lexer {
         context.getCharactersReader().subscribeToCharacters(linesCounter);
 
         context.setLogger(new Logger(linesCounter));
+    }
+
+    private static void setupLexer (LexerContext context) {
+        // TODO: Create state machine!
+        Lexer lexer = new Lexer(
+                new StateMachine(null, null),
+                context
+        );
+        context.setLexer(lexer);
     }
 }
