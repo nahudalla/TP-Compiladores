@@ -12,6 +12,6 @@ public class EmitInvalidCharacterError implements SemanticAction {
     }
 
     private String generateError(CharactersReader charactersReader){
-        return "Character invalid: " + charactersReader.getLastReadCharacter();
+        return "Caracter invalido: " + charactersReader.getLastReadCharacter();
     }
 }

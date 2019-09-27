@@ -20,4 +20,9 @@ public class TokenNumbers {
     public static final int WHILE = 270;
     public static final int CLASS = 271;
     public static final int EXTENDS = 272;
+    public static final int ASSIGNMENT = 273;
+    public static final int LESS_OR_EQUAL = 274;
+    public static final int NOT_EQUAL = 275;
+    public static final int GREATER_OR_EQUAL = 276;
+    public static final int EQUALS = 277;
 }

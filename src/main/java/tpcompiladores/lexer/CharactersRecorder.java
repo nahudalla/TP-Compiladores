@@ -28,6 +28,8 @@ public class CharactersRecorder implements CharactersObserver {
 
     @Override
     public void processReadCharacter(Character readCharacter) {
+        if (readCharacter == null) readCharacter = 0x0;
+
         this.lastReadCharacter = readCharacter;
 
         if(this.isRecording){
