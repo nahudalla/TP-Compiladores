@@ -1,7 +1,5 @@
 package tpcompiladores.lexer.stateMachine;
 
-import tpcompiladores.lexer.CharacterFilter;
-
 public class StateMachineBuilder {
     private int currentCharacterClass = 0;
     private CharacterFilter[] characterFilters;
@@ -32,6 +30,12 @@ public class StateMachineBuilder {
 
     public void addTransition(int startState, int characterClassID, StateTransition stateTransition) {
         this.stateTransitionMatrix[startState][characterClassID] = stateTransition;
+    }
+
+    public void addTransition(int startState, int[] characterClassIDs, StateTransition stateTransition) {
+        for (int characterClassId : characterClassIDs) {
+            this.addTransition(startState, characterClassId, stateTransition);
+        }
     }
 
     public void addDefaultTransition(int startState, StateTransition defaultTransition) {

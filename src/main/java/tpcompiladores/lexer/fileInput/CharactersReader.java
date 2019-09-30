@@ -11,6 +11,7 @@ public class CharactersReader {
     private Character lastReadCharacter = null;
     private boolean unGetCalled = false;
     private FileLine fileLine;
+    private String nextLineFromFile;
     private BufferedReader bufferedReader;
 
 
@@ -20,11 +21,16 @@ public class CharactersReader {
     }
 
     private boolean readNewLine() throws IOException {
-        String line = this.bufferedReader.readLine();
+        if (this.nextLineFromFile == null) {
+            this.nextLineFromFile = this.bufferedReader.readLine();
+        }
 
-        if(line == null) return false;
+        if(this.nextLineFromFile == null) return false;
 
-        this.fileLine = new FileLine(line);
+        String currentLine = this.nextLineFromFile;
+        this.nextLineFromFile = this.bufferedReader.readLine();
+
+        this.fileLine = new FileLine(currentLine, this.nextLineFromFile != null);
 
         return true;
     }
@@ -54,13 +60,19 @@ public class CharactersReader {
             return this.getLastReadCharacter();
         }
 
-        this.lastReadCharacter = this.fileLine.getNextCharacter();
+        Character nextCharacter;
 
-        if(this.lastReadCharacter == null) {
-            if(!this.readNewLine()) return null;
+        if (this.fileLine == null) {
+            nextCharacter = null;
+        } else {
+            nextCharacter = this.fileLine.getNextCharacter();
 
-            this.lastReadCharacter = this.fileLine.getNextCharacter();
+            if (nextCharacter == null && this.readNewLine()) {
+                nextCharacter = this.fileLine.getNextCharacter();
+            }
         }
+
+        this.lastReadCharacter = nextCharacter;
 
         this.notifyCharacterRead(this.lastReadCharacter);
 

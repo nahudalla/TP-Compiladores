@@ -1,7 +1,7 @@
 package tpcompiladores.lexer.stateMachine;
 
-import tpcompiladores.lexer.CharacterFilter;
 import tpcompiladores.lexer.LexerContext;
+import tpcompiladores.lexer.semanticActions.SemanticAction;
 
 public class StateMachine {
     private int currentState = 0;
@@ -24,7 +24,11 @@ public class StateMachine {
 
         StateTransition stateTransition = this.transitionMatrix[this.currentState][characterClass];
 
-        stateTransition.getSemanticAction().run(lexerContext);
+        SemanticAction semanticAction = stateTransition.getSemanticAction();
+        if (semanticAction != null) {
+            stateTransition.getSemanticAction().run(lexerContext);
+        }
+
         this.currentState = stateTransition.getNextState();
     }
 

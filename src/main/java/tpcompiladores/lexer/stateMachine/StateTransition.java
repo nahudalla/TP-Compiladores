@@ -4,7 +4,11 @@ import tpcompiladores.lexer.semanticActions.SemanticAction;
 
 public class StateTransition {
     private int nextState = 0;
-    private SemanticAction semanticAction;
+    private SemanticAction semanticAction = null;
+
+    public StateTransition(int nextState) {
+        this.nextState = nextState;
+    }
 
     public StateTransition(int nextState, SemanticAction semanticAction) {
         this.nextState = nextState;

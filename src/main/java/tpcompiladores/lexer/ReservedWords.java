@@ -24,7 +24,6 @@ public class ReservedWords {
         this.reservedWords.put("while", TokenNumbers.WHILE);
         this.reservedWords.put("class", TokenNumbers.CLASS);
         this.reservedWords.put("extends", TokenNumbers.EXTENDS);
-
     }
 
     public Integer getTokenNumber(String lexeme){
