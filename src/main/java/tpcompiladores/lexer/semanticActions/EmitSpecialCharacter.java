@@ -1,11 +1,11 @@
 package tpcompiladores.lexer.semanticActions;
 
-import tpcompiladores.lexer.LexerContext;
+import tpcompiladores.CompilerContext;
 
 public class EmitSpecialCharacter implements SemanticAction {
     @Override
-    public void run(LexerContext lexerContext) {
-        Character readCharacter = lexerContext.getCharactersReader().getLastReadCharacter();
-        lexerContext.getLexer().setNextToken(readCharacter);
+    public void run(CompilerContext compilerContext) {
+        Character readCharacter = compilerContext.getCharactersReader().getLastReadCharacter();
+        compilerContext.getLexer().setNextToken(readCharacter);
     }
 }

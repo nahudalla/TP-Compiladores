@@ -1,13 +1,13 @@
 package tpcompiladores.lexer.semanticActions;
 
 import tpcompiladores.lexer.fileInput.CharactersReader;
-import tpcompiladores.lexer.LexerContext;
+import tpcompiladores.CompilerContext;
 
 public class EmitInvalidCharacterError implements SemanticAction {
     @Override
-    public void run(LexerContext lexerContext) {
-        lexerContext.getLogger().logError(
-                this.generateError(lexerContext.getCharactersReader())
+    public void run(CompilerContext compilerContext) {
+        compilerContext.getLogger().logError(
+                this.generateError(compilerContext.getCharactersReader())
         );
     }
 

@@ -1,6 +1,6 @@
 package tpcompiladores.lexer.semanticActions;
 
-import tpcompiladores.lexer.LexerContext;
+import tpcompiladores.CompilerContext;
 
 public class EmitToken implements SemanticAction {
     private int token;
@@ -14,7 +14,7 @@ public class EmitToken implements SemanticAction {
     }
 
     @Override
-    public void run(LexerContext lexerContext) {
-        lexerContext.getLexer().setNextToken(this.token);
+    public void run(CompilerContext compilerContext) {
+        compilerContext.getLexer().setNextToken(this.token);
     }
 }

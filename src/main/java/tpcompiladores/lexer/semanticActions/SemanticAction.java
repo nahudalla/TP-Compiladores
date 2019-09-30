@@ -1,7 +1,7 @@
 package tpcompiladores.lexer.semanticActions;
 
-import tpcompiladores.lexer.LexerContext;
+import tpcompiladores.CompilerContext;
 
 public interface SemanticAction {
-    void run(LexerContext lexerContext);
+    void run(CompilerContext compilerContext);
 }

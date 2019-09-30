@@ -1,8 +1,7 @@
 package tpcompiladores;
 
-import tpcompiladores.lexer.Lexer;
-import tpcompiladores.lexer.LexerContext;
 import tpcompiladores.lexer.TokenNumbers;
+import tpcompiladores.parser.yacc_generated.Parser;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,19 +11,20 @@ public class Main {
 
     public static void main(String[] args) {
         File sourceFile = Main.askForSourceFile();
-        LexerContext context = Main.createContext(sourceFile);
+        Compiler compiler = Main.createCompilerInstance(sourceFile);
 
         // Aca va el codigo para ejecutar el compilador
-        Main.consumeTokens(context);
+        compiler.run();
+//        Main.consumeTokens(compiler);
 
-        Main.setExitCodeIfErrorsEmitted(context);
+        Main.setExitCodeIfErrorsEmitted(compiler);
     }
 
-    private static void consumeTokens (LexerContext lexerContext) {
-        int token, num = 1;
+    private static void consumeTokens (Compiler compiler) {
+        int token;
         do {
             try {
-                token = lexerContext.getLexer().getNextToken();
+                token = compiler.getContext().getLexer().getNextToken();
             } catch (IOException e) {
                 e.printStackTrace();
                 token = TokenNumbers.EOF;
@@ -43,22 +43,22 @@ public class Main {
         return sourceFile;
     }
 
-    private static LexerContext createContext (File sourceFile) {
+    private static Compiler createCompilerInstance(File sourceFile) {
         if (sourceFile == null) return null;
 
-        LexerContext context = null;
+        Compiler compiler = null;
         try {
-            context = Lexer.createContext(sourceFile);
+            compiler = new Compiler(sourceFile);
         } catch (IOException e) {
             System.err.println("Error al abrir el archivo");
             System.exit(1);
         }
 
-        return context;
+        return compiler;
     }
 
-    private static void setExitCodeIfErrorsEmitted (LexerContext context) {
-        Logger logger = context.getLogger();
+    private static void setExitCodeIfErrorsEmitted (Compiler compiler) {
+        Logger logger = compiler.getContext().getLogger();
 
         if (logger.hasEmittedErrors()) {
             System.exit(Main.EXIT_CODE_ON_ERRORS_EMITTED);

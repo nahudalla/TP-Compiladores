@@ -1,19 +1,31 @@
-package tpcompiladores.lexer;
+package tpcompiladores;
 
 import tpcompiladores.Logger;
+import tpcompiladores.lexer.CharactersRecorder;
+import tpcompiladores.lexer.Lexer;
 import tpcompiladores.lexer.fileInput.CharactersReader;
+import tpcompiladores.parser.yacc_generated.Parser;
 import tpcompiladores.symbolsTable.SymbolTableEntry;
 import tpcompiladores.symbolsTable.SymbolsTable;
 
 import java.util.Map;
 
-public class LexerContext {
+public class CompilerContext {
     private CharactersRecorder charactersRecorder;
     private CharactersReader charactersReader;
     private Lexer lexer;
     private Map<String,Integer> reservedWordsTable;
     private SymbolsTable symbolsTable;
     private Logger logger;
+    private Parser parser;
+
+    public Parser getParser() {
+        return this.parser;
+    }
+
+    public void setParser(Parser parser) {
+        this.parser = parser;
+    }
 
     public CharactersRecorder getCharactersRecorder() {
         return this.charactersRecorder;
