@@ -1,6 +1,6 @@
 package tpcompiladores.lexer.semanticActions;
 
-import tpcompiladores.lexer.LexerContext;
+import tpcompiladores.CompilerContext;
 
 public class EmitError implements SemanticAction {
     private String message;
@@ -10,7 +10,7 @@ public class EmitError implements SemanticAction {
     }
 
     @Override
-    public void run(LexerContext lexerContext) {
-        lexerContext.getLogger().logError(this.message);
+    public void run(CompilerContext compilerContext) {
+        compilerContext.getLogger().logError(this.message);
     }
 }

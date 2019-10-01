@@ -1,6 +1,6 @@
 package tpcompiladores.lexer.semanticActions;
 
-import tpcompiladores.lexer.LexerContext;
+import tpcompiladores.CompilerContext;
 
 public class EmitTokenWithSymbolTableReference extends EmitToken {
     private String reference;
@@ -11,7 +11,7 @@ public class EmitTokenWithSymbolTableReference extends EmitToken {
     }
 
     @Override
-    public void run(LexerContext lexerContext) {
-        lexerContext.getLexer().setNextToken(super.getToken(), this.reference);
+    public void run(CompilerContext compilerContext) {
+        compilerContext.getLexer().setNextToken(super.getToken(), this.reference);
     }
 }

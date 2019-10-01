@@ -1,6 +1,6 @@
 package tpcompiladores.lexer.semanticActions;
 
-import tpcompiladores.lexer.LexerContext;
+import tpcompiladores.CompilerContext;
 
 public class ComposedSemanticAction implements SemanticAction {
     private SemanticAction semanticActionA;
@@ -12,8 +12,8 @@ public class ComposedSemanticAction implements SemanticAction {
     }
 
     @Override
-    public void run(LexerContext lexerContext) {
-        this.semanticActionA.run(lexerContext);
-        this.semanticActionB.run(lexerContext);
+    public void run(CompilerContext compilerContext) {
+        this.semanticActionA.run(compilerContext);
+        this.semanticActionB.run(compilerContext);
     }
 }

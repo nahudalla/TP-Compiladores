@@ -1,19 +1,20 @@
 package tpcompiladores.lexer.semanticActions;
 
 import tpcompiladores.CompilerConstants;
+import tpcompiladores.CompilerContext;
 import tpcompiladores.lexer.*;
 import tpcompiladores.symbolsTable.SymbolTableEntry;
 
 public class EmitNumericConstant implements SemanticAction {
     private static final long MAX_SAFE_LONG = CompilerConstants.MAX_LONG - 1;
-    private LexerContext lexerContext;
+    private CompilerContext compilerContext;
     private long constant;
 
     @Override
-    public void run(LexerContext lexerContext) {
-        this.lexerContext = lexerContext;
+    public void run(CompilerContext compilerContext) {
+        this.compilerContext = compilerContext;
 
-        String recordedString = lexerContext.getCharactersRecorder().getRecordedString();
+        String recordedString = compilerContext.getCharactersRecorder().getRecordedString();
 
         try {
             this.constant = Long.parseLong(recordedString);
@@ -37,8 +38,8 @@ public class EmitNumericConstant implements SemanticAction {
     private void processNumericConstant(int token){
         SymbolTableEntry symbolTableEntry = new SymbolTableEntry();
         symbolTableEntry.setLexeme(String.valueOf(this.constant));
-        String key = lexerContext.getSymbolsTable().addNumericConstant(symbolTableEntry);
-        lexerContext.getLexer().setNextToken(token, key);
+        String key = compilerContext.getSymbolsTable().addNumericConstant(symbolTableEntry);
+        compilerContext.getLexer().setNextToken(token, key);
     }
 
     private void processInt(){
@@ -50,7 +51,7 @@ public class EmitNumericConstant implements SemanticAction {
     }
 
     private void emitOutOfRangeError(String constant){
-        this.lexerContext.getLogger().logError(
+        this.compilerContext.getLogger().logError(
                 "Constante fuera de rango: " + constant + ". Maximo permitido: " + CompilerConstants.MAX_LONG +
                         ". Asumiendo el valor: " + MAX_SAFE_LONG + "."
         );

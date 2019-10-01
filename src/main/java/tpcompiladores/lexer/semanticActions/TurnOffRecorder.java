@@ -1,10 +1,10 @@
 package tpcompiladores.lexer.semanticActions;
 
-import tpcompiladores.lexer.LexerContext;
+import tpcompiladores.CompilerContext;
 
 public class TurnOffRecorder implements SemanticAction {
     @Override
-    public void run(LexerContext lexerContext) {
-        lexerContext.getCharactersRecorder().turnOff();
+    public void run(CompilerContext compilerContext) {
+        compilerContext.getCharactersRecorder().turnOff();
     }
 }

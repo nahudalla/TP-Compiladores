@@ -1,10 +1,10 @@
 package tpcompiladores.lexer.semanticActions;
 
-import tpcompiladores.lexer.LexerContext;
+import tpcompiladores.CompilerContext;
 
 public class UngetLastReadCharacter implements SemanticAction {
     @Override
-    public void run(LexerContext lexerContext) {
-        lexerContext.getCharactersReader().unGetLastCharacter();
+    public void run(CompilerContext compilerContext) {
+        compilerContext.getCharactersReader().unGetLastCharacter();
     }
 }

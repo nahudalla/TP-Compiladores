@@ -1,10 +1,10 @@
 package tpcompiladores.lexer.semanticActions;
 
-import tpcompiladores.lexer.LexerContext;
+import tpcompiladores.CompilerContext;
 
 public class ForgetLastRecordedCharacter implements SemanticAction {
     @Override
-    public void run(LexerContext lexerContext) {
-        lexerContext.getCharactersRecorder().forgetMostRecentCharacter();
+    public void run(CompilerContext compilerContext) {
+        compilerContext.getCharactersRecorder().forgetMostRecentCharacter();
     }
 }
