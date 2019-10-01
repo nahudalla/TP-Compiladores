@@ -24,6 +24,8 @@ public class TokenDisplayName {
     private static final String NOT_EQUAL = "DISTINTO";
     private static final String GREATER_OR_EQUAL = "MAYOR_IGUAL";
     private static final String EQUALS = "IGUAL";
+    private static final String UNTIL = "UNTIL";
+    private static final String VOID = "VOID";
 
     public static String get (Integer tokenId) {
         if (tokenId == null) return UNKNOWN;
@@ -52,6 +54,8 @@ public class TokenDisplayName {
             case TokenNumbers.NOT_EQUAL: return NOT_EQUAL;
             case TokenNumbers.GREATER_OR_EQUAL: return GREATER_OR_EQUAL;
             case TokenNumbers.EQUALS: return EQUALS;
+            case TokenNumbers.UNTIL: return UNTIL;
+            case TokenNumbers.VOID: return VOID;
             default: return UNKNOWN;
         }
     }

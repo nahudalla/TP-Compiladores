@@ -1,11 +1,9 @@
 package tpcompiladores;
 
-import tpcompiladores.Logger;
 import tpcompiladores.lexer.CharactersRecorder;
 import tpcompiladores.lexer.Lexer;
 import tpcompiladores.lexer.fileInput.CharactersReader;
 import tpcompiladores.parser.yacc_generated.Parser;
-import tpcompiladores.symbolsTable.SymbolTableEntry;
 import tpcompiladores.symbolsTable.SymbolsTable;
 
 import java.util.Map;

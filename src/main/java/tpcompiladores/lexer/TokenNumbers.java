@@ -1,6 +1,7 @@
 package tpcompiladores.lexer;
 
 public class TokenNumbers {
+    private static int TOKEN_NUMBER = 257;
     private TokenNumbers(){}
 
     public static final int EOF = 0;
@@ -25,4 +26,6 @@ public class TokenNumbers {
     public static final int NOT_EQUAL = 275;
     public static final int GREATER_OR_EQUAL = 276;
     public static final int EQUALS = 277;
+    public static final int UNTIL = 278;
+    public static final int VOID = 279;
 }
