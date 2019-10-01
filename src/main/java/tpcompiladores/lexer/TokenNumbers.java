@@ -1,7 +1,6 @@
 package tpcompiladores.lexer;
 
 public class TokenNumbers {
-    private static int TOKEN_NUMBER = 257;
     private TokenNumbers(){}
 
     public static final int EOF = 0;
