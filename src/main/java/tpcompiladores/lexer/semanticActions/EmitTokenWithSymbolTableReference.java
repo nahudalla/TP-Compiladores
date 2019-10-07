@@ -14,4 +14,9 @@ public class EmitTokenWithSymbolTableReference extends EmitToken {
     public void run(CompilerContext compilerContext) {
         compilerContext.getLexer().setNextToken(super.getToken(), this.reference);
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + " (with symbols table reference)";
+    }
 }

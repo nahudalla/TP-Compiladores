@@ -3,11 +3,11 @@ package tpcompiladores.tests;
 import tpcompiladores.lexer.CharactersRecorder;
 
 public class TestCharactersRecorder {
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         CharactersRecorder charactersRecorder = new CharactersRecorder();
 
         //Testing for all functions in CharactersRecorder except for "forgetMostRecentCharacter" and "reset"
-        String testString = new String("This is the first line\nThis is the second line\nThis one is the third and last");
+        String testString = "This is the first line\nThis is the second line\nThis one is the third and last";
 
         charactersRecorder.turnOn();
         String record = "";

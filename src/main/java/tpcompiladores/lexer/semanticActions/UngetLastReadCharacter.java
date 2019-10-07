@@ -7,4 +7,9 @@ public class UngetLastReadCharacter implements SemanticAction {
     public void run(CompilerContext compilerContext) {
         compilerContext.getCharactersReader().unGetLastCharacter();
     }
+
+    @Override
+    public String toString() {
+        return "  -- UngetLastReadCharacter";
+    }
 }

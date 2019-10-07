@@ -7,4 +7,9 @@ public class LetterFilter implements CharacterFilter {
     public boolean matches(Character character) {
         return character != null && Character.isLetter(character);
     }
+
+    @Override
+    public String toString() {
+        return "  -- LetterFilter (character is a Unicode letter)";
+    }
 }

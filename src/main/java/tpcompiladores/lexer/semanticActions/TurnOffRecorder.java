@@ -7,4 +7,9 @@ public class TurnOffRecorder implements SemanticAction {
     public void run(CompilerContext compilerContext) {
         compilerContext.getCharactersRecorder().turnOff();
     }
+
+    @Override
+    public String toString() {
+        return "  -- TurnOffRecorder";
+    }
 }

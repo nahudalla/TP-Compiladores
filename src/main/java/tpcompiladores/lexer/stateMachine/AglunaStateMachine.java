@@ -1,8 +1,8 @@
 package tpcompiladores.lexer.stateMachine;
 
-import tpcompiladores.lexer.TokenNumbers;
 import tpcompiladores.lexer.semanticActions.*;
 import tpcompiladores.lexer.stateMachine.aglunaCharacterFilters.*;
+import tpcompiladores.parser.yacc_generated.Parser;
 
 public class AglunaStateMachine {
     // AGLUNA is the name of our toy language.
@@ -48,51 +48,55 @@ public class AglunaStateMachine {
         ));
         int SPECIAL = builder.addCharacterClass(new ASCIIFilter());
 
-        builder.addTransition(0, LETTER, new StateTransition(1, new TurnOnRecorder()));
+        SemanticAction turnOnRecorder = new TurnOnRecorder();
+        SemanticAction turnOffRecorder = new TurnOffRecorder();
+        SemanticAction forgetLastRecordedCharacter = new ForgetLastRecordedCharacter();
+
+        builder.addTransition(0, LETTER, new StateTransition(1, turnOnRecorder));
 
         int[] LETTER_DIGIT_UNDERSCORE = { LETTER, DIGIT, UNDERSCORE };
         builder.addTransition(1, LETTER_DIGIT_UNDERSCORE, new StateTransition(1));
 
         builder.addDefaultTransition(1, new StateTransition(0, new ComposedSemanticAction(
-                new ComposedSemanticAction(new TurnOffRecorder(), new ForgetLastRecordedCharacter()),
+                turnOffRecorder,
                 new ComposedSemanticAction(new UngetLastReadCharacter(), new EmitIdentifierOrReservedWord())
         )));
 
         builder.addTransition(0, SPECIAL, new StateTransition(0, new EmitSpecialCharacter()));
 
         builder.addTransition(0, COLON, new StateTransition(2));
-        builder.addTransition(2, EQUALS, new StateTransition(0, new EmitToken(TokenNumbers.ASSIGNMENT)));
+        builder.addTransition(2, EQUALS, new StateTransition(0, new EmitToken(Parser.ASSIGNMENT)));
         builder.addDefaultTransition(2, new StateTransition(0, new ComposedSemanticAction(
                 new ComposedSemanticAction(
                         new EmitWarning("Falta caracter '=' despues de ':'. Asignacion asumida."),
-                        new EmitToken(TokenNumbers.ASSIGNMENT)
+                        new EmitToken(Parser.ASSIGNMENT)
                 ),
                 new UngetLastReadCharacter()
         )));
 
         builder.addTransition(0, LESS_THAN, new StateTransition(3));
-        builder.addTransition(3, EQUALS, new StateTransition(0, new EmitToken(TokenNumbers.LESS_OR_EQUAL)));
-        builder.addTransition(3, GREATER_THAN, new StateTransition(0, new EmitToken(TokenNumbers.NOT_EQUAL)));
+        builder.addTransition(3, EQUALS, new StateTransition(0, new EmitToken(Parser.LESS_OR_EQUAL)));
+        builder.addTransition(3, GREATER_THAN, new StateTransition(0, new EmitToken(Parser.NOT_EQUAL)));
         builder.addDefaultTransition(3, new StateTransition(0, new ComposedSemanticAction(
                 new UngetLastReadCharacter(),
                 new EmitToken('<')
         )));
 
         builder.addTransition(0, GREATER_THAN, new StateTransition(4));
-        builder.addTransition(4, EQUALS, new StateTransition(0, new EmitToken(TokenNumbers.GREATER_OR_EQUAL)));
+        builder.addTransition(4, EQUALS, new StateTransition(0, new EmitToken(Parser.GREATER_OR_EQUAL)));
         builder.addDefaultTransition(4, new StateTransition(0, new ComposedSemanticAction(
                 new UngetLastReadCharacter(),
                 new EmitToken('>')
         )));
 
         builder.addTransition(0, EQUALS, new StateTransition(5));
-        builder.addTransition(5, EQUALS, new StateTransition(0, new EmitToken(TokenNumbers.EQUALS)));
+        builder.addTransition(5, EQUALS, new StateTransition(0, new EmitToken(Parser.EQUALS)));
         builder.addDefaultTransition(5, new StateTransition(0, new ComposedSemanticAction(
                 new ComposedSemanticAction(
                         new EmitWarning("Falta caracter '=' despues de '='. Operador de igualdad asumido."),
                         new UngetLastReadCharacter()
                 ),
-                new EmitToken(TokenNumbers.EQUALS)
+                new EmitToken(Parser.EQUALS)
         )));
 
         builder.addTransition(0, HASH, new StateTransition(6));
@@ -101,24 +105,21 @@ public class AglunaStateMachine {
         builder.addDefaultTransition(6, new StateTransition(6));
 
         builder.addTransition(0, OPEN_CURLY_BRACKET, new StateTransition(7, new ComposedSemanticAction(
-                new TurnOnRecorder(),
-                new ForgetLastRecordedCharacter()
+                turnOnRecorder,
+                forgetLastRecordedCharacter
         )));
-        builder.addTransition(7, BACKSLASH, new StateTransition(8, new ForgetLastRecordedCharacter()));
+        builder.addTransition(7, BACKSLASH, new StateTransition(8, forgetLastRecordedCharacter));
         builder.addDefaultTransition(8, new StateTransition(7));
         builder.addTransition(7, CLOSE_CURLY_BRACKET, new StateTransition(0, new ComposedSemanticAction(
                 new ComposedSemanticAction(
-                        new TurnOffRecorder(),
-                        new ForgetLastRecordedCharacter()
+                        turnOffRecorder,
+                        forgetLastRecordedCharacter
                 ),
                 new EmitStringConstant()
         )));
         builder.addTransition(7, EOF, new StateTransition(0, new ComposedSemanticAction(
                 new ComposedSemanticAction(
-                        new ComposedSemanticAction(
-                                new TurnOffRecorder(),
-                                new ForgetLastRecordedCharacter()
-                        ),
+                        turnOffRecorder,
                         new UngetLastReadCharacter()
                 ),
                 new ComposedSemanticAction(
@@ -127,16 +128,13 @@ public class AglunaStateMachine {
                 )
         )));
         builder.addDefaultTransition(7, new StateTransition(7));
-        builder.addTransition(7, ENDLINE, new StateTransition(7, new ForgetLastRecordedCharacter()));
-        builder.addTransition(8, ENDLINE, new StateTransition(7, new ForgetLastRecordedCharacter()));
+        builder.addTransition(7, ENDLINE, new StateTransition(7, forgetLastRecordedCharacter));
+        builder.addTransition(8, ENDLINE, new StateTransition(7, forgetLastRecordedCharacter));
 
-        builder.addTransition(0, DIGIT, new StateTransition(9, new TurnOnRecorder()));
+        builder.addTransition(0, DIGIT, new StateTransition(9, turnOnRecorder));
         builder.addTransition(9, DIGIT, new StateTransition(9));
         builder.addDefaultTransition(9, new StateTransition(0, new ComposedSemanticAction(
-                new ComposedSemanticAction(
-                        new TurnOffRecorder(),
-                        new ForgetLastRecordedCharacter()
-                ),
+                turnOffRecorder,
                 new ComposedSemanticAction(
                         new UngetLastReadCharacter(),
                         new EmitNumericConstant()
@@ -145,7 +143,7 @@ public class AglunaStateMachine {
 
         int[] WHITESPACE_ENDLINE = { WHITESPACE, ENDLINE };
         builder.addTransition(0, WHITESPACE_ENDLINE, new StateTransition(0));
-        builder.addTransition(0, EOF, new StateTransition(0, new EmitToken(TokenNumbers.EOF)));
+        builder.addTransition(0, EOF, new StateTransition(0, new EmitToken(Parser.EOF)));
 
         builder.addDefaultTransition(0, new StateTransition(0, new EmitInvalidCharacterError()));
 

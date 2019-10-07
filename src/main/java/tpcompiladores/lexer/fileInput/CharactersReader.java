@@ -2,7 +2,10 @@ package tpcompiladores.lexer.fileInput;
 
 import tpcompiladores.lexer.CharactersObserver;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +44,12 @@ public class CharactersReader {
         }
     }
 
+    private void notifyCharacterUngeted(Character ungetedCharacter){
+        for(CharactersObserver subscriber : this.subscribers) {
+            subscriber.processUngetedCharacter(ungetedCharacter);
+        }
+    }
+
     public void subscribeToCharacters(CharactersObserver charactersObserver){
         this.subscribers.add(charactersObserver);
     }
@@ -50,14 +59,20 @@ public class CharactersReader {
     }
 
     public void unGetLastCharacter(){
-        this.unGetCalled = true;
+        if (!this.unGetCalled) {
+            this.unGetCalled = true;
+            this.notifyCharacterUngeted(this.lastReadCharacter);
+        }
     }
 
     public Character getNextCharacter() throws IOException {
         if (this.unGetCalled) {
             this.unGetCalled = false;
 
-            return this.getLastReadCharacter();
+            Character lastReadCharacter = this.getLastReadCharacter();
+            this.notifyCharacterRead(lastReadCharacter);
+
+            return lastReadCharacter;
         }
 
         Character nextCharacter;

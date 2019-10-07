@@ -3,7 +3,7 @@ package tpcompiladores.tests;
 import tpcompiladores.lexer.fileInput.FileLine;
 
 public class TestFileLine {
-    public static void main(String args[]){
+    public static void main(String[] args){
         FileLine fileLine = new FileLine("This is a new line", false);
 
         System.out.println("We'll print the content of the fileLine using its getNextCharacter method");

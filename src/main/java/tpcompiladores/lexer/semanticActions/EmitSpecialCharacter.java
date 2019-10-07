@@ -8,4 +8,9 @@ public class EmitSpecialCharacter implements SemanticAction {
         Character readCharacter = compilerContext.getCharactersReader().getLastReadCharacter();
         compilerContext.getLexer().setNextToken(readCharacter);
     }
+
+    @Override
+    public String toString() {
+        return "  -- EmitSpecialCharacter (ASCII)";
+    }
 }

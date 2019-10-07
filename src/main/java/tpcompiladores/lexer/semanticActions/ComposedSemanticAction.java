@@ -16,4 +16,15 @@ public class ComposedSemanticAction implements SemanticAction {
         this.semanticActionA.run(compilerContext);
         this.semanticActionB.run(compilerContext);
     }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append(this.semanticActionA.toString())
+                .append(System.lineSeparator())
+                .append(this.semanticActionB.toString());
+
+        return builder.toString();
+    }
 }

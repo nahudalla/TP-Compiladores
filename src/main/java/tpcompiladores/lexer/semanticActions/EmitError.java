@@ -11,6 +11,11 @@ public class EmitError implements SemanticAction {
 
     @Override
     public void run(CompilerContext compilerContext) {
-        compilerContext.getLogger().logError(this.message);
+        compilerContext.getLogger().logLexerError(this.message);
+    }
+
+    @Override
+    public String toString() {
+        return "  -- EmitError: " + message;
     }
 }

@@ -18,8 +18,10 @@ public class CharactersRecorder implements CharactersObserver {
         return this.isRecording;
     }
 
-    public void forgetMostRecentCharacter(){
-        this.recording = this.recording.substring(0,recording.length()-1);
+    public void forgetMostRecentCharacter() {
+        if (this.recording.length() > 0){
+            this.recording = this.recording.substring(0, this.recording.length() - 1);
+        }
     }
 
     public String getRecordedString(){
@@ -35,5 +37,10 @@ public class CharactersRecorder implements CharactersObserver {
         if(this.isRecording){
             this.recording = this.recording.concat(readCharacter.toString());
         }
+    }
+
+    @Override
+    public void processUngetedCharacter(Character ungetedCharacter) {
+        this.forgetMostRecentCharacter();
     }
 }

@@ -7,4 +7,9 @@ public class DigitFilter implements CharacterFilter {
     public boolean matches(Character character) {
         return character != null && Character.isDigit(character);
     }
+
+    @Override
+    public String toString() {
+        return "  -- DigitFilter (character is a digit [0-9])";
+    }
 }
