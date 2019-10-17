@@ -45,6 +45,13 @@ public class SymbolsTable {
     }
 
     public void print(PrintStream stream) {
+        String[][] tableData = this.buildTableData();
+
+        if (tableData == null) {
+            stream.println("TABLA DE SIMBOLOS VACIA");
+            return;
+        }
+
         ColumnFormatter<String> centeredFormatter = ColumnFormatter.text(Alignment.CENTER, TABLE_COLUMN_WIDTH);
 
         String[] header = new String[SymbolsTableEntry.COLUMN_NAMES.length];
@@ -55,13 +62,15 @@ public class SymbolsTable {
         ColumnFormatter<String> leftFormatter = ColumnFormatter.text(Alignment.LEFT, TABLE_COLUMN_WIDTH);
         Table table = Table.of(
                 header,
-                this.buildTableData(),
+                tableData,
                 leftFormatter
         );
         stream.println(table);
     }
 
     private String[][] buildTableData () {
+        if (this.symbolsTable.isEmpty()) return null;
+
         String[][] tableData = new String[this.symbolsTable.size()][];
 
         int i = 0;
