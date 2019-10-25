@@ -2,9 +2,10 @@ package tpcompiladores;
 
 import tpcompiladores.lexer.CharactersRecorder;
 import tpcompiladores.lexer.Lexer;
-import tpcompiladores.lexer.LinesCounter;
+import tpcompiladores.lexer.LineNumber;
 import tpcompiladores.lexer.fileInput.CharactersReader;
 import tpcompiladores.lexer.stateMachine.AglunaStateMachine;
+import tpcompiladores.lexer.stateMachine.StateMachine;
 import tpcompiladores.parser.yacc_generated.Parser;
 import tpcompiladores.symbolsTable.SymbolsTable;
 
@@ -26,8 +27,12 @@ public class Compiler {
         int code = this.context.getParser().parse();
 
         if (code != 0) {
-            this.context.getLogger().logError("Fallo en la etapa de parsing.");
+            this.context.getLogger().logParserError("Fallo en la etapa de parsing.");
         }
+
+        this.context.getLogger().logSymbolsTable(
+               this.context.getSymbolsTable()
+        );
     }
 
     public CompilerContext getContext() {
@@ -56,10 +61,10 @@ public class Compiler {
     }
 
     private void setupLogger () {
-        LinesCounter linesCounter = new LinesCounter();
+        LineNumber lineNumber = new LineNumber();
 
-        this.context.getCharactersReader().subscribeToCharacters(linesCounter);
-        this.context.setLogger(new Logger(linesCounter));
+        this.context.getCharactersReader().subscribeToCharacters(lineNumber);
+        this.context.setLogger(new Logger(lineNumber));
     }
 
     private void setupLexer () {
@@ -68,5 +73,12 @@ public class Compiler {
                 this.context
         );
         this.context.setLexer(lexer);
+    }
+
+    public static void printStateTransitionMatrix() {
+        Logger logger = new Logger();
+        StateMachine stateMachine = AglunaStateMachine.getStateMachine();
+
+        logger.logMessage(stateMachine.toString());
     }
 }

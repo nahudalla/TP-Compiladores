@@ -11,6 +11,11 @@ public class EmitWarning implements SemanticAction {
 
     @Override
     public void run(CompilerContext compilerContext) {
-        compilerContext.getLogger().logWarning(this.message);
+        compilerContext.getLogger().logLexerWarning(this.message);
+    }
+
+    @Override
+    public String toString() {
+        return "  -- EmitWarning: " + message;
     }
 }

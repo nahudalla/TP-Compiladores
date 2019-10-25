@@ -1,8 +1,8 @@
 package tpcompiladores.lexer.semanticActions;
 
 import tpcompiladores.CompilerContext;
-import tpcompiladores.lexer.TokenNumbers;
-import tpcompiladores.symbolsTable.SymbolTableEntry;
+import tpcompiladores.parser.yacc_generated.Parser;
+import tpcompiladores.symbolsTable.SymbolsTableEntry;
 
 public class EmitStringConstant implements SemanticAction {
     @Override
@@ -11,15 +11,20 @@ public class EmitStringConstant implements SemanticAction {
         String key = this.addToSymbolsTable(compilerContext, constant);
 
         compilerContext.getLexer().setNextToken(
-                TokenNumbers.CONST_STRING,
+                Parser.CONST_STRING,
                 key
         );
     }
 
     private String addToSymbolsTable(CompilerContext compilerContext, String constant) {
-        SymbolTableEntry symbolTableEntry = new SymbolTableEntry();
-        symbolTableEntry.setLexeme(constant);
+        SymbolsTableEntry symbolsTableEntry = new SymbolsTableEntry();
+        symbolsTableEntry.setLexeme(constant);
 
-        return compilerContext.getSymbolsTable().addStringConstant(symbolTableEntry);
+        return compilerContext.getSymbolsTable().addStringConstant(symbolsTableEntry);
+    }
+
+    @Override
+    public String toString() {
+        return "  -- EmitStringConstant";
     }
 }

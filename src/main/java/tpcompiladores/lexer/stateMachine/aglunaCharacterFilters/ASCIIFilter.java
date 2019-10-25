@@ -7,4 +7,9 @@ public class ASCIIFilter implements CharacterFilter {
     public boolean matches(Character character) {
         return Character.getNumericValue(character) < 256;
     }
+
+    @Override
+    public String toString() {
+        return "  -- ASCIIFilter (character numeric representation < 256)";
+    }
 }

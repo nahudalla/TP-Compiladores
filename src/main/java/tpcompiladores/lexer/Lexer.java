@@ -1,13 +1,8 @@
 package tpcompiladores.lexer;
 
 import tpcompiladores.CompilerContext;
-import tpcompiladores.Logger;
-import tpcompiladores.lexer.fileInput.CharactersReader;
-import tpcompiladores.lexer.stateMachine.AglunaStateMachine;
 import tpcompiladores.lexer.stateMachine.StateMachine;
-import tpcompiladores.symbolsTable.SymbolsTable;
 
-import java.io.File;
 import java.io.IOException;
 
 public class Lexer {

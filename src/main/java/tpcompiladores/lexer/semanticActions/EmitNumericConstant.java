@@ -2,11 +2,10 @@ package tpcompiladores.lexer.semanticActions;
 
 import tpcompiladores.CompilerConstants;
 import tpcompiladores.CompilerContext;
-import tpcompiladores.lexer.*;
-import tpcompiladores.symbolsTable.SymbolTableEntry;
+import tpcompiladores.parser.yacc_generated.Parser;
+import tpcompiladores.symbolsTable.SymbolsTableEntry;
 
 public class EmitNumericConstant implements SemanticAction {
-    private static final long MAX_SAFE_LONG = CompilerConstants.MAX_LONG - 1;
     private CompilerContext compilerContext;
     private long constant;
 
@@ -20,30 +19,31 @@ public class EmitNumericConstant implements SemanticAction {
             this.constant = Long.parseLong(recordedString);
         } catch (NumberFormatException e) {
             this.emitOutOfRangeError(recordedString);
-            this.constant = MAX_SAFE_LONG;
+            this.constant = CompilerConstants.MAX_POSITIVE_LONG;
         }
 
-        if (this.constant <= CompilerConstants.MAX_INT) {
+        if (this.constant <= CompilerConstants.MAX_ABS_INT) {
             this.processInt();
-        } else if (constant <= CompilerConstants.MAX_LONG) {
+        } else if (constant <= CompilerConstants.MAX_ABS_LONG) {
             this.processLong();
         } else {
             long originalConstant = this.constant;
-            this.constant = MAX_SAFE_LONG;
+            this.constant = CompilerConstants.MAX_POSITIVE_LONG;
             this.processLong();
             this.emitOutOfRangeError(originalConstant);
         }
     }
 
-    private void processNumericConstant(int token){
-        SymbolTableEntry symbolTableEntry = new SymbolTableEntry();
-        symbolTableEntry.setLexeme(String.valueOf(this.constant));
-        String key = compilerContext.getSymbolsTable().addNumericConstant(symbolTableEntry);
-        compilerContext.getLexer().setNextToken(token, key);
+    private void processNumericConstant(String type){
+        SymbolsTableEntry symbolsTableEntry = new SymbolsTableEntry();
+        symbolsTableEntry.setLexeme(String.valueOf(this.constant));
+        symbolsTableEntry.setType(type);
+        String key = compilerContext.getSymbolsTable().addNumericConstant(symbolsTableEntry);
+        compilerContext.getLexer().setNextToken(Parser.NUMERIC_CONST, key);
     }
 
     private void processInt(){
-        this.processNumericConstant(TokenNumbers.CONST_INT);
+        this.processNumericConstant("INT");
     }
 
     private void emitOutOfRangeError(long constant) {
@@ -51,13 +51,18 @@ public class EmitNumericConstant implements SemanticAction {
     }
 
     private void emitOutOfRangeError(String constant){
-        this.compilerContext.getLogger().logError(
-                "Constante fuera de rango: " + constant + ". Maximo permitido: " + CompilerConstants.MAX_LONG +
-                        ". Asumiendo el valor: " + MAX_SAFE_LONG + "."
+        this.compilerContext.getLogger().logLexerError(
+                "Constante fuera de rango: " + constant + ". Maximo permitido: " + CompilerConstants.MAX_ABS_LONG +
+                        ". Asumiendo el valor: " + CompilerConstants.MAX_POSITIVE_LONG + "."
         );
     }
 
     private void processLong(){
-        this.processNumericConstant(TokenNumbers.CONST_LONG);
+        this.processNumericConstant("LONG");
+    }
+
+    @Override
+    public String toString() {
+        return "  -- EmitNumericConstant";
     }
 }

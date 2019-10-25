@@ -7,4 +7,9 @@ public class ForgetLastRecordedCharacter implements SemanticAction {
     public void run(CompilerContext compilerContext) {
         compilerContext.getCharactersRecorder().forgetMostRecentCharacter();
     }
+
+    @Override
+    public String toString() {
+        return "  -- ForgetLastRecordedCharacter";
+    }
 }

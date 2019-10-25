@@ -3,8 +3,8 @@ package tpcompiladores.lexer.semanticActions;
 import tpcompiladores.CompilerConstants;
 import tpcompiladores.CompilerContext;
 import tpcompiladores.lexer.ReservedWords;
-import tpcompiladores.symbolsTable.SymbolTableEntry;
-import tpcompiladores.lexer.TokenNumbers;
+import tpcompiladores.parser.yacc_generated.Parser;
+import tpcompiladores.symbolsTable.SymbolsTableEntry;
 
 public class EmitIdentifierOrReservedWord implements SemanticAction {
     @Override
@@ -17,7 +17,7 @@ public class EmitIdentifierOrReservedWord implements SemanticAction {
         if (this.emitReservedWord(compilerContext, identifier)) return;
 
         String key = this.addIdentifierToSymbolsTable(compilerContext, identifier);
-        compilerContext.getLexer().setNextToken(TokenNumbers.ID, key);
+        compilerContext.getLexer().setNextToken(Parser.ID, key);
     }
 
     private boolean emitReservedWord(CompilerContext compilerContext, String lexeme) {
@@ -35,7 +35,7 @@ public class EmitIdentifierOrReservedWord implements SemanticAction {
         if (identifier.length() > CompilerConstants.MAX_ID_LENGTH){
             String newIdentifier = identifier.substring(0, CompilerConstants.MAX_ID_LENGTH);
 
-            compilerContext.getLogger().logWarning(
+            compilerContext.getLogger().logLexerWarning(
                     "Identificador truncado ("+newIdentifier+"): "+identifier
             );
 
@@ -46,9 +46,14 @@ public class EmitIdentifierOrReservedWord implements SemanticAction {
     }
 
     private String addIdentifierToSymbolsTable (CompilerContext compilerContext, String identifier) {
-        SymbolTableEntry symbolTableEntry = new SymbolTableEntry();
-        symbolTableEntry.setLexeme(identifier);
+        SymbolsTableEntry symbolsTableEntry = new SymbolsTableEntry();
+        symbolsTableEntry.setLexeme(identifier);
 
-        return compilerContext.getSymbolsTable().addIdentifier(symbolTableEntry);
+        return compilerContext.getSymbolsTable().addIdentifier(symbolsTableEntry);
+    }
+
+    @Override
+    public String toString() {
+        return "  -- EmitIdentifierOrReservedWord";
     }
 }

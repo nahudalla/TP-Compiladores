@@ -1,2 +1,3 @@
 target
 src/main/java/tpcompiladores/parser/yacc_generated/*.java
+src/yacc/y.output

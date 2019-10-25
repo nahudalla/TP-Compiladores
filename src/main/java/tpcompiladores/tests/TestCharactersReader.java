@@ -1,21 +1,21 @@
 package tpcompiladores.tests;
 
 import tpcompiladores.FileChooser;
-import tpcompiladores.lexer.fileInput.CharactersReader;
 import tpcompiladores.lexer.CharactersRecorder;
-import tpcompiladores.lexer.LinesCounter;
+import tpcompiladores.lexer.LineNumber;
+import tpcompiladores.lexer.fileInput.CharactersReader;
 
 import java.io.File;
 import java.io.IOException;
 
 public class TestCharactersReader {
-    public static void main (String args[]) throws IOException {
+    public static void main (String[] args) throws IOException {
         File file = FileChooser.showFileChooser("Please select a text file");
         CharactersReader charactersReader = new CharactersReader(file);
-        LinesCounter linesCounter = new LinesCounter();
+        LineNumber lineNumber = new LineNumber();
         CharactersRecorder charactersRecorder = new CharactersRecorder();
 
-        charactersReader.subscribeToCharacters(linesCounter);
+        charactersReader.subscribeToCharacters(lineNumber);
         charactersReader.subscribeToCharacters(charactersRecorder);
 
         System.out.println("We'll test the notification system between this class and its observers after reading a test file");
@@ -30,16 +30,16 @@ public class TestCharactersReader {
             }
         } while (lastReadCharacter != null);
 
-        System.out.println("The total number of lines is: " + linesCounter.getCurrentLineNumber());
+        System.out.println("The total number of lines is: " + lineNumber.getCurrentLineNumber());
 
         System.out.println("The recording of the whole text file is:\n" + charactersRecorder.getRecordedString() + '\n');
 
         System.out.println("Now let's duplicate all 'i's using the unGetLastReadCharacter");
 
         charactersReader = new CharactersReader(file);
-        linesCounter = new LinesCounter();
+        lineNumber = new LineNumber();
 
-        charactersReader.subscribeToCharacters(linesCounter);
+        charactersReader.subscribeToCharacters(lineNumber);
         charactersReader.subscribeToCharacters(charactersRecorder);
 
         charactersRecorder.turnOn();
@@ -59,7 +59,7 @@ public class TestCharactersReader {
             }
         } while (lastReadCharacter != null);
 
-        System.out.println("The total number of lines is: " + linesCounter.getCurrentLineNumber());
+        System.out.println("The total number of lines is: " + lineNumber.getCurrentLineNumber());
         System.out.println("The recording of the whole text file is:\n" + charactersRecorder.getRecordedString());
     }
 }
