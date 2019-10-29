@@ -7,7 +7,7 @@ public class SymbolsTableEntry {
 
     private String identifier;
     private String lexeme;
-    private String type;
+    private Type type;
 
     public String getIdentifier() {
         return this.identifier;
@@ -25,11 +25,11 @@ public class SymbolsTableEntry {
         this.lexeme = lexeme;
     }
 
-    public String getType() {
+    public Type getType() {
         return this.type;
     }
 
-    public void setType(String type) {
+    public void setType(Type type) {
         this.type = type;
     }
 
@@ -39,6 +39,12 @@ public class SymbolsTableEntry {
                 this.preprocessFieldValue(this.lexeme),
                 this.preprocessFieldValue(this.type)
         };
+    }
+
+    private String preprocessFieldValue (Type value) {
+        if (value == null) return "";
+
+        return this.preprocessFieldValue(value.getName());
     }
 
     private String preprocessFieldValue (String value) {

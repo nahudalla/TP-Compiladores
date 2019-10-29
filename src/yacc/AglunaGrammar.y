@@ -3,6 +3,7 @@ import tpcompiladores.CompilerConstants;
 import tpcompiladores.CompilerContext;
 import tpcompiladores.symbolsTable.SymbolsTable;
 import tpcompiladores.symbolsTable.SymbolsTableEntry;
+import tpcompiladores.symbolsTable.Type;
 import java.io.IOException;
 %}
 
@@ -144,7 +145,7 @@ private ParserVal processNumericConstant (int isNegated, String symbolsTableRefe
     SymbolsTable symbolsTable = this.context.getSymbolsTable();
     SymbolsTableEntry originalEntry = symbolsTable.getEntry(symbolsTableReference);
     String originalLexeme = originalEntry.getLexeme();
-    String type = originalEntry.getType();
+    Type type = originalEntry.getType();
 
     if (isNegated == 1) {
         SymbolsTableEntry entry = new SymbolsTableEntry();
@@ -153,11 +154,11 @@ private ParserVal processNumericConstant (int isNegated, String symbolsTableRefe
         symbolsTableReference = symbolsTable.addNumericConstant(entry);
     } else {
         long originalValue = Long.parseLong(originalLexeme);
-        if (type.equals("INT") && originalValue > CompilerConstants.MAX_POSITIVE_INT) {
-            type = "LONG";
+        if (type.equals(Type.INT) && originalValue > CompilerConstants.MAX_POSITIVE_INT) {
+            type = Type.LONG;
             originalEntry.setType(type);
         }
-        if (type.equals("LONG") && originalValue > CompilerConstants.MAX_POSITIVE_LONG) {
+        if (type.equals(Type.LONG) && originalValue > CompilerConstants.MAX_POSITIVE_LONG) {
             this.yyerror("Constante positiva fuera de rango: " + originalValue + ". Maximo permitido: " +
                 CompilerConstants.MAX_POSITIVE_LONG + ". Asumiendo el valor: " + CompilerConstants.MAX_POSITIVE_LONG + ".");
             SymbolsTableEntry entry = new SymbolsTableEntry();

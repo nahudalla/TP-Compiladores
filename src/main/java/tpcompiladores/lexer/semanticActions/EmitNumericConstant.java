@@ -4,6 +4,7 @@ import tpcompiladores.CompilerConstants;
 import tpcompiladores.CompilerContext;
 import tpcompiladores.parser.yacc_generated.Parser;
 import tpcompiladores.symbolsTable.SymbolsTableEntry;
+import tpcompiladores.symbolsTable.Type;
 
 public class EmitNumericConstant implements SemanticAction {
     private CompilerContext compilerContext;
@@ -34,7 +35,7 @@ public class EmitNumericConstant implements SemanticAction {
         }
     }
 
-    private void processNumericConstant(String type){
+    private void processNumericConstant(Type type){
         SymbolsTableEntry symbolsTableEntry = new SymbolsTableEntry();
         symbolsTableEntry.setLexeme(String.valueOf(this.constant));
         symbolsTableEntry.setType(type);
@@ -43,7 +44,7 @@ public class EmitNumericConstant implements SemanticAction {
     }
 
     private void processInt(){
-        this.processNumericConstant("INT");
+        this.processNumericConstant(Type.INT);
     }
 
     private void emitOutOfRangeError(long constant) {
@@ -58,7 +59,7 @@ public class EmitNumericConstant implements SemanticAction {
     }
 
     private void processLong(){
-        this.processNumericConstant("LONG");
+        this.processNumericConstant(Type.LONG);
     }
 
     @Override
