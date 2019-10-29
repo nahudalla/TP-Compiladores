@@ -15,18 +15,29 @@ public class Main {
         if (args.length > 0) {
             Main.runSpecialCommand(args[0]);
         } else {
-            File sourceFile = Main.askForSourceFile();
-            Compiler compiler = Main.createCompilerInstance(sourceFile);
-
-            compiler.run();
-
-            Main.setExitCodeIfErrorsEmitted(compiler);
+            Main.runCompilation();
         }
+    }
+
+    private static void runCompilation () {
+        Main.runCompilation(false);
+    }
+
+    private static void runCompilation (boolean verbose) {
+        File sourceFile = Main.askForSourceFile();
+        Compiler compiler = Main.createCompilerInstance(sourceFile);
+
+        if (verbose) compiler.enableVerboseMode();
+
+        compiler.run();
+
+        Main.setExitCodeIfErrorsEmitted(compiler);
     }
 
     private static void runSpecialCommand(String command) {
         switch (command) {
             case "--transitions": Compiler.printStateTransitionMatrix(); break;
+            case "--verbose": Main.runCompilation(true); break;
             default:
                 System.err.println("Unknown switch: " + command);
                 System.exit(1);
