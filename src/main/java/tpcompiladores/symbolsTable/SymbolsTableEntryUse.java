@@ -1,4 +1,4 @@
-package tpcompiladores.parser;
+package tpcompiladores.symbolsTable;
 
 public enum SymbolsTableEntryUse {
     VARIABLE,
