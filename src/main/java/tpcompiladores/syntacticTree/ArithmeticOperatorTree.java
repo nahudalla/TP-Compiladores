@@ -11,14 +11,4 @@ public class ArithmeticOperatorTree extends SyntacticTree {
     public Type resultType() {
         return null;
     }
-
-    @Override
-    public boolean isReferenceToMethod() {
-        return true;
-    }
-
-    @Override
-    public boolean isReferenceToVariable() {
-        return true;
-    }
 }
