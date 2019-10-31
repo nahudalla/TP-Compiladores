@@ -3,9 +3,8 @@ package tpcompiladores.syntacticTree;
 import tpcompiladores.symbolsTable.Type;
 
 public class ArithmeticOperatorTree extends SyntacticTree {
-
-    public ArithmeticOperatorTree(String value, SyntacticTree leftTree, SyntacticTree rightTree) {
-        super(value, leftTree, rightTree);
+    public ArithmeticOperatorTree(SyntacticTree leftTree, SyntacticTree rightTree) {
+        super(leftTree, rightTree);
     }
 
     @Override
@@ -15,11 +14,11 @@ public class ArithmeticOperatorTree extends SyntacticTree {
 
     @Override
     public boolean isReferenceToMethod() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isReferenceToVariable() {
-        return false;
+        return true;
     }
 }
