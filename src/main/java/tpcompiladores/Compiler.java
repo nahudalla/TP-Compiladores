@@ -81,4 +81,9 @@ public class Compiler {
 
         logger.logMessage(stateMachine.toString());
     }
+
+	public void enableVerboseMode() {
+        this.context.getLogger().enablePrintRecognizedTokens();
+        this.context.getLogger().enablePrintRecognizedSyntacticStructures();
+	}
 }

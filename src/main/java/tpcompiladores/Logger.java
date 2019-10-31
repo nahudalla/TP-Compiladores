@@ -20,12 +20,23 @@ public class Logger {
     private boolean hasEmittedErrors = false;
     private LineNumber lineNumber;
 
+    private boolean isPrintRecognizedTokensEnabled = false;
+    private boolean isPrintRecognizedSyntacticStructuresEnabled = false;
+
     public Logger(){
         this.lineNumber = new LineNumber();
     }
 
     public Logger(LineNumber lineNumber){
         this.lineNumber = lineNumber;
+    }
+
+    public void enablePrintRecognizedTokens () {
+        this.isPrintRecognizedTokensEnabled = true;
+    }
+
+    public void enablePrintRecognizedSyntacticStructures () {
+        this.isPrintRecognizedSyntacticStructuresEnabled = true;
     }
 
     public int getCurrentLineNumber () {
@@ -59,6 +70,8 @@ public class Logger {
     }
 
     public void logSyntacticStructure(int line, String message){
+        if (!this.isPrintRecognizedSyntacticStructuresEnabled) return;
+
         this.printLineNumber(System.out, line, "ESTRUCTURA SINTACTICA", ANSI_BLUE);
         this.lastLoggedTokenLine = null;
         System.out.println(message);
@@ -91,6 +104,8 @@ public class Logger {
     }
 
     public void logRecognizedToken(Integer nextToken, String lexeme) {
+        if (!this.isPrintRecognizedTokensEnabled) return;
+
         if (lexeme != null && lexeme.length() > MAX_LEXEME_PRINT_LENGTH) {
             lexeme = lexeme.substring(0, MAX_LEXEME_PRINT_LENGTH) + ELLIPSIS;
         }
