@@ -139,4 +139,6 @@ public class Logger {
         this.printLineNumber(System.out, "TOKENS RECONOCIDOS", ANSI_GREEN);
         this.lastLoggedTokenLine = this.lineNumber.getCurrentLineNumber();
     }
+
+    public void logSemanticError(String message) {}
 }
