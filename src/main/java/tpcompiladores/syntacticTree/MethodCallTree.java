@@ -1,14 +1,13 @@
 package tpcompiladores.syntacticTree;
 
 import tpcompiladores.CompilerContext;
-import tpcompiladores.symbolsTable.Type;
-import tpcompiladores.parser.Class;
+import tpcompiladores.parser.Klass;
 
 public class MethodCallTree extends SyntacticTree {
-    private Class klass;
+    private Klass klass;
     private String methodName;
 
-    private MethodCallTree(Class klass, String methodName) {
+    private MethodCallTree(Klass klass, String methodName) {
         this.klass = klass;
         this.methodName = methodName;
     }
@@ -18,7 +17,7 @@ public class MethodCallTree extends SyntacticTree {
         this.klass = null;
     }
 
-    public static MethodCallTree create(CompilerContext compilerContext, Class klass, String methodName){
+    public static MethodCallTree create(CompilerContext compilerContext, Klass klass, String methodName){
         if (klass.hasMethod(methodName)) {
             return new MethodCallTree(klass, methodName);
         }
