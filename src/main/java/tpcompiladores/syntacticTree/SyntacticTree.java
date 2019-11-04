@@ -5,8 +5,10 @@ import tpcompiladores.symbolsTable.Type;
 import java.io.PrintStream;
 
 public abstract class SyntacticTree {
-    protected SyntacticTree leftTree;
-    protected SyntacticTree rightTree;
+    protected SyntacticTree leftTree = null;
+    protected SyntacticTree rightTree = null;
+
+    protected SyntacticTree() {}
 
     protected SyntacticTree (SyntacticTree leftTree, SyntacticTree rightTree) {
         this.leftTree = leftTree;
@@ -20,10 +22,12 @@ public abstract class SyntacticTree {
     }
 
     public boolean isLeaf(){
-        return false;
+        return this.leftTree == null && this.rightTree == null;
     }
 
-    public abstract Type resultType ();
+    public Type resultType () {
+        return null;
+    }
 
     public boolean isReferenceToMethod(){
         return false;
