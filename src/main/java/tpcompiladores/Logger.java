@@ -16,6 +16,8 @@ public class Logger {
     private static final int MAX_LEXEME_PRINT_LENGTH = 25;
     private static final String ELLIPSIS = String.valueOf(Character.toChars(0x2026));
 
+    private static Logger instance;
+
     private Long lastLoggedTokenLine = null;
     private boolean hasEmittedErrors = false;
     private LineNumber lineNumber;
@@ -23,11 +25,17 @@ public class Logger {
     private boolean isPrintRecognizedTokensEnabled = false;
     private boolean isPrintRecognizedSyntacticStructuresEnabled = false;
 
-    public Logger(){
-        this.lineNumber = new LineNumber();
+    private Logger () {}
+
+    public static Logger getInstance () {
+        if (Logger.instance == null) {
+            Logger.instance = new Logger();
+        }
+
+        return Logger.instance;
     }
 
-    public Logger(LineNumber lineNumber){
+    public void setLineNumber (LineNumber lineNumber) {
         this.lineNumber = lineNumber;
     }
 
