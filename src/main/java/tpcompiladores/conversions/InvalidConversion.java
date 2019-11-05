@@ -4,9 +4,15 @@ import tpcompiladores.Logger;
 import tpcompiladores.symbolsTable.Type;
 import tpcompiladores.syntacticTree.SyntacticTree;
 
-public class InvalidConversion extends Conversion {
-    public InvalidConversion(Type requiredType) {
-        super(requiredType);
+public class InvalidConversion implements Conversion {
+    private final String otherTypeStr;
+
+    public InvalidConversion(Type otherType) {
+        if (otherType == null) {
+            this.otherTypeStr = "DESCONOCIDO";
+        } else {
+            this.otherTypeStr = otherType.toString();
+        }
     }
 
     @Override
@@ -16,7 +22,7 @@ public class InvalidConversion extends Conversion {
 
         if (type != null) typeStr = type.toString();
 
-        Logger.getInstance().logSemanticError("No se puede operar entre los tipos " + typeStr + " y " + super.requiredTypeStr);
+        Logger.getInstance().logSemanticError("No se puede operar entre los tipos " + typeStr + " y " + this.otherTypeStr);
 
         return syntacticTree;
     }

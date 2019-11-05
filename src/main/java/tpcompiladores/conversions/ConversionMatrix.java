@@ -47,7 +47,7 @@ public class ConversionMatrix {
                 Type.INVALID
         ));
 
-        Conversion empty = new EmptyConversion(null);
+        Conversion empty = new EmptyConversion();
         ConversionMatrixCell cell = new ConversionMatrixCell(empty, empty, Type.INVALID);
         this.fillPredefinedCells(Type.INVALID, cell);
 
