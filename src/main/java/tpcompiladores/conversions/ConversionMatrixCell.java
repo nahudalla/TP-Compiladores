@@ -12,11 +12,11 @@ public class ConversionMatrixCell {
         this.result = result;
     }
 
-    public Conversion getLeft() {
+    public Conversion getLeftConversion() {
         return this.left;
     }
 
-    public Conversion getRight() {
+    public Conversion getRightConversion() {
         return this.right;
     }
 
