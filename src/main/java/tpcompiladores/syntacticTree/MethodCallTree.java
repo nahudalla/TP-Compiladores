@@ -23,7 +23,7 @@ public class MethodCallTree extends SyntacticTree {
         }
 
         compilerContext.getLogger().logSemanticError(
-                "el metodo " + methodName + "no se encuentra en la clase " + klass.getName()
+                "el metodo " + methodName + " no se encuentra en la clase " + klass.getName()
         );
 
         return new MethodCallTree();
