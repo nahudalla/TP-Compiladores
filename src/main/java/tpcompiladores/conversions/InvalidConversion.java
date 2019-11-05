@@ -16,7 +16,7 @@ public class InvalidConversion extends Conversion {
 
         if (type != null) typeStr = type.toString();
 
-        Logger.getInstance().logSemanticError("No se puede convertir el tipo " + typeStr + " a " + super.requiredTypeStr);
+        Logger.getInstance().logSemanticError("No se puede operar entre los tipos " + typeStr + " y " + super.requiredTypeStr);
 
         return syntacticTree;
     }
