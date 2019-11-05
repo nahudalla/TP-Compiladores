@@ -6,7 +6,7 @@ import tpcompiladores.syntacticTree.SyntacticTree;
 public abstract class Conversion {
     protected final String requiredTypeStr;
 
-    public Conversion(Type requiredType) {
+    protected Conversion(Type requiredType) {
         if (requiredType == null) {
             this.requiredTypeStr = "DESCONOCIDO";
         } else {
