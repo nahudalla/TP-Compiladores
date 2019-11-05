@@ -62,9 +62,11 @@ public class Compiler {
 
     private void setupLogger () {
         LineNumber lineNumber = new LineNumber();
+        Logger logger = Logger.getInstance();
 
         this.context.getCharactersReader().subscribeToCharacters(lineNumber);
-        this.context.setLogger(new Logger(lineNumber));
+        logger.setLineNumber(lineNumber);
+        this.context.setLogger(logger);
     }
 
     private void setupLexer () {
@@ -76,7 +78,7 @@ public class Compiler {
     }
 
     public static void printStateTransitionMatrix() {
-        Logger logger = new Logger();
+        Logger logger = Logger.getInstance();
         StateMachine stateMachine = AglunaStateMachine.getStateMachine();
 
         logger.logMessage(stateMachine.toString());
