@@ -11,7 +11,7 @@ public class ConversionMatrix {
 
     private int convertTypeToIndex(Type type) {
         Integer index = typeToIndex.get(type);
-        if (index == null) return this.typeToIndex.size()-1;
+        if (index == null) return this.conversionMatrix.length-1;
 
         return index;
     }
