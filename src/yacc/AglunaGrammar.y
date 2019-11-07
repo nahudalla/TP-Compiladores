@@ -18,8 +18,7 @@ programa : lista_sentencias_declarativas sentencia_ejecutable ;
 
 lista_sentencias_declarativas : sentencia_declarativa lista_sentencias_declarativas | /* empty */ ;
 
-sentencia_declarativa : opciones_sentencia_declarativa ';'
-                      | error ';' {yyerror("Error en sentencia declarativa"); };
+sentencia_declarativa : opciones_sentencia_declarativa ';';
 
 opciones_sentencia_declarativa : declaracion_variables
                                | declaracion_clase ;
@@ -53,13 +52,17 @@ opciones_sentencia : bloque_do_until
                    | llamada_metodo_clase {$$.sval = "Llamada a metodo de clase";};
 
 bloque_if : IF condicion bloque_sentencias else_if END_IF { $$.sval = "If" + $4.sval; }
-          | IF error else_if END_IF { yyerror("Bloque if invalido (con else valido)"); }
+          | IF error END_IF { yyerror("Error en sentencia 'if'."); }
           ;
+
 else_if : ELSE bloque_sentencias {$$.sval = " (con else)";} | /* empty */ {$$.sval = "";} ;
 
 bloque_sentencias : sentencia | bloque_lista_sentencias;
 
-bloque_do_until : DO bloque_sentencias UNTIL condicion {$$.sval = "Bloque 'do' 'until'";};
+bloque_do_until : DO bloque_sentencias UNTIL condicion {$$.sval = "Bloque 'do' 'until'";}
+                | DO error UNTIL condicion { yyerror("Error en sentencia 'do..until'"); }
+                | DO bloque_sentencias UNTIL error { yyerror("Error en comparacion de 'do..until'"); }
+                | DO error UNTIL error { yyerror("Error en sentencia 'do..until'"); };
 
 sentencia_print : PRINT '(' CONST_STRING ')';
 
@@ -104,7 +107,7 @@ izq_asignacion : ID | ref_miembro_clase ;
 
 llamada_metodo_clase : ref_miembro_clase '(' ')';
 
-condicion : '(' comparacion ')'
+condicion : '(' comparacion ')' { logSyntacticStructure(getLineNumber(), "Condicion"); }
           | comparacion ')' { yyerror("Falta parentesis de inicio de condicion"); }
           | '(' comparacion { yyerror("Falta parentesis de cierre de condicion"); }
           | '(' ')' { yyerror("Falta comparacion"); }
@@ -134,6 +137,8 @@ private int getLineNumber () {
 }
 
 private void logSyntacticStructure (int line, String message) {
+    if (message == null) return;
+
     this.context.getLogger().logSyntacticStructure(line, message);
 }
 

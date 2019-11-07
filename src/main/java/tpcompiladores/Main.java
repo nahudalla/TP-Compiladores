@@ -5,8 +5,6 @@ import tpcompiladores.parser.yacc_generated.Parser;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
 
 public class Main {
     private final static int EXIT_CODE_ON_ERRORS_EMITTED = 1;
