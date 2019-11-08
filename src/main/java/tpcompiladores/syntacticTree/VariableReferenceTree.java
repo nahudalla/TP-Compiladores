@@ -1,24 +1,14 @@
 package tpcompiladores.syntacticTree;
 
-import tpcompiladores.symbolsTable.Type;
+import tpcompiladores.symbolsTable.SymbolsTableEntry;
 
-public class VariableReferenceTree extends SyntacticTree {
-    public VariableReferenceTree(SyntacticTree leftTree, SyntacticTree rightTree) {
-        super(leftTree, rightTree);
-    }
-
-    @Override
-    public Type resultType() {
-        return null;
-    }
-
-    @Override
-    public boolean isReferenceToMethod() {
-        return false;
+public class VariableReferenceTree extends LeafTree {
+    public VariableReferenceTree(SymbolsTableEntry symbolsTableReference) {
+        super(symbolsTableReference);
     }
 
     @Override
     public boolean isReferenceToVariable() {
-        return false;
+        return true;
     }
 }
