@@ -1,14 +1,7 @@
 package tpcompiladores.syntacticTree;
 
-import tpcompiladores.symbolsTable.Type;
-
 public class DoUntilComparisonTree extends SyntacticTree {
-    public DoUntilComparisonTree(SyntacticTree leftTree, SyntacticTree rightTree) {
-        super(leftTree, rightTree);
-    }
-
-    @Override
-    public Type resultType() {
-        return null;
+    public DoUntilComparisonTree(ComparisonTree leftTree) {
+        super(leftTree);
     }
 }
