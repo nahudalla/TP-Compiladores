@@ -3,12 +3,11 @@ package tpcompiladores.syntacticTree;
 import tpcompiladores.symbolsTable.Type;
 
 public class PrintTree extends SyntacticTree {
-    public PrintTree(SyntacticTree leftTree, SyntacticTree rightTree) {
-        super(leftTree, rightTree);
+    public PrintTree(LeafTree stringConstantTree) {
+        super(stringConstantTree);
     }
-
-    @Override
-    public Type resultType() {
-        return null;
+    
+    private LeafTree getStringConstantTree () {
+        return (LeafTree) this.leftTree;
     }
 }
