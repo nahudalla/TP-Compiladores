@@ -15,6 +15,10 @@ public abstract class SyntacticTree {
         this.rightTree = rightTree;
     }
 
+    protected SyntacticTree (SyntacticTree leftTree) {
+        this.leftTree = leftTree;
+    }
+
     public void print (PrintStream stream) {   }
 
     protected SyntacticTree leftMostNodeWithLeaves () {

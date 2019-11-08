@@ -3,12 +3,15 @@ package tpcompiladores.syntacticTree;
 import tpcompiladores.symbolsTable.Type;
 
 public class IfBranchesTree extends SyntacticTree {
-    public IfBranchesTree(SyntacticTree leftTree, SyntacticTree rightTree) {
-        super(leftTree, rightTree);
+    public IfBranchesTree(IfThenBranchTree ifThenBranchTree, IfElseBranchTree ifElseBranchTree) {
+        super(ifThenBranchTree, ifElseBranchTree);
     }
 
-    @Override
-    public Type resultType() {
-        return null;
+    private IfThenBranchTree getThenTree () {
+        return (IfThenBranchTree) super.leftTree;
+    }
+
+    private IfElseBranchTree getElseTree () {
+        return (IfElseBranchTree) super.rightTree;
     }
 }
