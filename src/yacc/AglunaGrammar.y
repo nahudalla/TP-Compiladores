@@ -18,8 +18,7 @@ programa : lista_sentencias_declarativas sentencia_ejecutable ;
 
 lista_sentencias_declarativas : sentencia_declarativa lista_sentencias_declarativas | /* empty */ ;
 
-sentencia_declarativa : opciones_sentencia_declarativa ';'
-                      | error ';' {yyerror("Error en sentencia declarativa"); };
+sentencia_declarativa : opciones_sentencia_declarativa ';';
 
 opciones_sentencia_declarativa : declaracion_variables
                                | declaracion_clase ;
@@ -48,20 +47,25 @@ capturar_numero_linea : { $$.ival = getLineNumber(); };
 
 opciones_sentencia : bloque_do_until
                    | bloque_if
-                   | sentencia_print {$$.sval = "Print";}
-                   | asignacion {$$.sval = "Asignacion";}
-                   | llamada_metodo_clase {$$.sval = "Llamada a metodo de clase";};
+                   | sentencia_print
+                   | asignacion
+                   | llamada_metodo_clase;
 
 bloque_if : IF condicion bloque_sentencias else_if END_IF { $$.sval = "If" + $4.sval; }
-          | IF error else_if END_IF { yyerror("Bloque if invalido (con else valido)"); }
+          | IF error END_IF { yyerror("Error en sentencia 'if'."); }
           ;
+
 else_if : ELSE bloque_sentencias {$$.sval = " (con else)";} | /* empty */ {$$.sval = "";} ;
 
 bloque_sentencias : sentencia | bloque_lista_sentencias;
 
-bloque_do_until : DO bloque_sentencias UNTIL condicion {$$.sval = "Bloque 'do' 'until'";};
+bloque_do_until : DO bloque_sentencias UNTIL condicion {$$.sval = "Bloque 'do' 'until'";}
+                | DO error UNTIL condicion { yyerror("Error en sentencia 'do..until'"); }
+                | DO bloque_sentencias UNTIL error { yyerror("Error en comparacion de 'do..until'"); }
+                | DO error UNTIL error { yyerror("Error en sentencia 'do..until'"); };
 
-sentencia_print : PRINT '(' CONST_STRING ')';
+sentencia_print : PRINT '(' CONST_STRING ')' { $$.sval = "Print"; }
+                | PRINT error { yyerror("Error en sentencia 'print'"); };
 
 expresion : expresion '+' termino | expresion '-' termino | termino ;
 
@@ -98,13 +102,16 @@ declaracion_metodos : capturar_numero_linea VOID ID '(' ')' bloque_lista_sentenc
 
 ref_miembro_clase :  ID capturar_numero_linea '.' ID  {logSyntacticStructure($2.ival, "Referencia a miembro de clase");};
 
-asignacion : izq_asignacion ASSIGNMENT expresion;
+asignacion : izq_asignacion ASSIGNMENT expresion { $$.sval = "Asignacion"; }
+           | izq_asignacion ASSIGNMENT { yyerror("Falta parte derecha de asignacion"); }
+           | izq_asignacion ASSIGNMENT error { yyerror("Error en parte derecha de asignacion."); };
 
 izq_asignacion : ID | ref_miembro_clase ;
 
-llamada_metodo_clase : ref_miembro_clase '(' ')';
+llamada_metodo_clase : ref_miembro_clase '(' ')' { $$.sval = "Llamada a metodo de clase"; }
+                     | ref_miembro_clase '(' error { yyerror("Error en llamada a metodo de clase"); };
 
-condicion : '(' comparacion ')'
+condicion : '(' comparacion ')' { logSyntacticStructure(getLineNumber(), "Condicion"); }
           | comparacion ')' { yyerror("Falta parentesis de inicio de condicion"); }
           | '(' comparacion { yyerror("Falta parentesis de cierre de condicion"); }
           | '(' ')' { yyerror("Falta comparacion"); }
@@ -134,6 +141,8 @@ private int getLineNumber () {
 }
 
 private void logSyntacticStructure (int line, String message) {
+    if (message == null) return;
+
     this.context.getLogger().logSyntacticStructure(line, message);
 }
 
