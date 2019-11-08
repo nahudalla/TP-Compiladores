@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SymbolsTable {
-    private final static int TABLE_COLUMN_WIDTH = 50;
+    private final static int TABLE_COLUMN_WIDTH = 25;
     private final static String NUMERIC_CONSTANT_PREFIX = "NUM_CONST_";
     private final static String STRING_CONSTANT_PREFIX = "STR_CONST_";
     private final static String ID_PREFIX = "ID_";

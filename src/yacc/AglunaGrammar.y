@@ -1,9 +1,12 @@
 %{
 import tpcompiladores.CompilerConstants;
 import tpcompiladores.CompilerContext;
-import tpcompiladores.symbolsTable.SymbolsTable;
-import tpcompiladores.symbolsTable.SymbolsTableEntry;
+import tpcompiladores.symbolsTable.*;
 import tpcompiladores.symbolsTable.Type;
+import tpcompiladores.syntacticTree.*;
+import tpcompiladores.syntacticTree.comparators.*;
+import tpcompiladores.parser.ParserVal;
+import java.util.ArrayList;
 import java.io.IOException;
 %}
 
@@ -23,14 +26,27 @@ sentencia_declarativa : opciones_sentencia_declarativa ';';
 opciones_sentencia_declarativa : declaracion_variables
                                | declaracion_clase ;
 
-declaracion_variables : capturar_numero_linea tipo lista_identificadores {
-    if ($2.sval == "OBJ") logSyntacticStructure($1.ival, "Declaracion de objetos");
-    else logSyntacticStructure($1.ival, "Declaracion de variables");
+declaracion_variables : declaracion_variable | declaracion_objeto;
+
+declaracion_variable : capturar_numero_linea tipo_var lista_identificadores {
+    SymbolsTableEntry.setUse($3.tableRefs, SymbolsTableEntryUse.VARIABLE);
+    SymbolsTableEntry.setType($3.tableRefs, new Type($2.type.getName()));
+    logSyntacticStructure($1.ival, "Declaracion de variables");
 };
 
-tipo : INT | LONG | ID { $$.sval = "OBJ"; } ;
+tipo_var : INT { $$.type = Type.INT; }
+         | LONG  { $$.type = Type.LONG; }
+;
 
-lista_identificadores : ID | ID ',' lista_identificadores;
+declaracion_objeto : capturar_numero_linea ID lista_identificadores {
+    SymbolsTableEntry.setUse($3.tableRefs, SymbolsTableEntryUse.OBJECT);
+    SymbolsTableEntry.setType($3.tableRefs, new Type($2.tableRef.getLexeme()));
+    logSyntacticStructure($1.ival, "Declaracion de objetos");
+};
+
+lista_identificadores
+  : ID { $$.tableRefs = new ArrayList<>(); $$.tableRefs.add($1.tableRef); }
+  | ID ',' lista_identificadores { $$ = $3; $$.tableRefs.add($1.tableRef); };
 
 sentencia_ejecutable : bloque_lista_sentencias | /* empty */;
 
@@ -55,7 +71,7 @@ bloque_if : IF condicion bloque_sentencias else_if END_IF { $$.sval = "If" + $4.
           | IF error END_IF { yyerror("Error en sentencia 'if'."); }
           ;
 
-else_if : ELSE bloque_sentencias {$$.sval = " (con else)";} | /* empty */ {$$.sval = "";} ;
+else_if : ELSE bloque_sentencias {$$.sval = " (con else)";} | /* empty */;
 
 bloque_sentencias : sentencia | bloque_lista_sentencias;
 
@@ -71,17 +87,19 @@ expresion : expresion '+' termino | expresion '-' termino | termino ;
 
 termino : termino '*' factor | termino '/' factor | factor ;
 
-factor : ID | number | ref_miembro_clase ;
+factor : ID { $$.tree = new LeafTree($1.tableRef); }
+       | number
+       | ref_miembro_clase ;
 
 number : capturar_numero_linea number_negation NUMERIC_CONST {
-    $$ = processNumericConstant($2.ival, $3.sval);
+    SymbolsTableEntry entry = processNumericConstant($2.bval, $3.tableRef);
 
-    SymbolsTable symbolsTable = this.context.getSymbolsTable();
-    SymbolsTableEntry entry = symbolsTable.getEntry($$.sval);
+    $$.tree = new LeafTree(entry);
+
     logSyntacticStructure($1.ival, "Constante " + entry.getType() + ": " + entry.getLexeme());
 };
 
-number_negation : '-' {$$.ival = 1;} | /* empty */ {$$.ival = 0;};
+number_negation : '-' {$$.bval = true;} | /* empty */;
 
 declaracion_clase : header_clase capturar_numero_linea cuerpo_clase { logSyntacticStructure($2.ival, "Declaracion clase"); }
                   | header_clase capturar_numero_linea extends_clase cuerpo_clase { logSyntacticStructure($2.ival, "Declaracion clase (con extends)"); } ;
@@ -111,16 +129,21 @@ izq_asignacion : ID | ref_miembro_clase ;
 llamada_metodo_clase : ref_miembro_clase '(' ')' { $$.sval = "Llamada a metodo de clase"; }
                      | ref_miembro_clase '(' error { yyerror("Error en llamada a metodo de clase"); };
 
-condicion : '(' comparacion ')' { logSyntacticStructure(getLineNumber(), "Condicion"); }
+condicion : '(' comparacion ')' { $$ = $2; logSyntacticStructure(getLineNumber(), "Condicion"); }
           | comparacion ')' { yyerror("Falta parentesis de inicio de condicion"); }
           | '(' comparacion { yyerror("Falta parentesis de cierre de condicion"); }
           | '(' ')' { yyerror("Falta comparacion"); }
           | comparacion { yyerror("Faltan los parentesis para la comparacion"); }
           | '(' error ')' { yyerror("Comparacion invalida"); };
 
-comparacion : expresion comparador expresion ;
-
-comparador : LESS_OR_EQUAL | NOT_EQUAL | GREATER_OR_EQUAL | EQUALS | '<' | '>' ;
+comparacion
+  : expresion LESS_OR_EQUAL expresion { $$.tree = new LessOrEqualComparisonTree($1.tree, $2.tree); }
+  | expresion NOT_EQUAL expresion { $$.tree = new NotEqualComparisonTree($1.tree, $2.tree); }
+  | expresion GREATER_OR_EQUAL expresion { $$.tree = new GreaterOrEqualComparisonTree($1.tree, $2.tree); }
+  | expresion EQUALS expresion { $$.tree = new EqualsComparisonTree($1.tree, $2.tree); }
+  | expresion '<' expresion { $$.tree = new LessThanComparisonTree($1.tree, $2.tree); }
+  | expresion '>' expresion { $$.tree = new GreaterThanComparisonTree($1.tree, $2.tree); }
+;
 
 %%
 public static final short EOF = 0;
@@ -146,17 +169,17 @@ private void logSyntacticStructure (int line, String message) {
     this.context.getLogger().logSyntacticStructure(line, message);
 }
 
-public void setSymbolsTableReference (String reference) {
+public void setSymbolsTableReference (SymbolsTableEntry reference) {
     this.yylval = new ParserVal(reference);
 }
 
-private ParserVal processNumericConstant (int isNegated, String symbolsTableReference) {
+private SymbolsTableEntry processNumericConstant (boolean isNegated, SymbolsTableEntry originalEntry) {
     SymbolsTable symbolsTable = this.context.getSymbolsTable();
-    SymbolsTableEntry originalEntry = symbolsTable.getEntry(symbolsTableReference);
+    String symbolsTableReference = originalEntry.getIdentifier();
     String originalLexeme = originalEntry.getLexeme();
     Type type = originalEntry.getType();
 
-    if (isNegated == 1) {
+    if (isNegated) {
         SymbolsTableEntry entry = new SymbolsTableEntry();
         entry.setLexeme("-" + originalLexeme);
         entry.setType(type);
@@ -177,7 +200,7 @@ private ParserVal processNumericConstant (int isNegated, String symbolsTableRefe
         }
     }
 
-    return new ParserVal(symbolsTableReference);
+    return symbolsTable.getEntry(symbolsTableReference);
 }
 
 public int parse () {
