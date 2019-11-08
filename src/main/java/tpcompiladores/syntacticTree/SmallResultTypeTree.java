@@ -6,10 +6,11 @@ import tpcompiladores.conversions.ConversionMatrixCell;
 import tpcompiladores.conversions.EmptyConversion;
 import tpcompiladores.symbolsTable.Type;
 
-public class SmallResultTypeTree extends SyntacticTree {
+public class SmallResultTypeTree extends SyntacticTreeWithConversions {
     private static final ConversionMatrix matrix = new ConversionMatrix();
+
     public SmallResultTypeTree(SyntacticTree leftTree, SyntacticTree rightTree) {
-        super(leftTree, rightTree);
+        super(SmallResultTypeTree.matrix, leftTree, rightTree);
     }
 
     static {
