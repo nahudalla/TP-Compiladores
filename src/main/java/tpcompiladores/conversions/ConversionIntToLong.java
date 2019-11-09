@@ -1,8 +1,7 @@
 package tpcompiladores.conversions;
 
-import tpcompiladores.symbolsTable.Type;
 import tpcompiladores.syntacticTree.SyntacticTree;
-import tpcompiladores.syntacticTree.IntToLongConversionTree;
+import tpcompiladores.syntacticTree.conversions.IntToLongConversionTree;
 
 public class ConversionIntToLong implements Conversion {
     @Override

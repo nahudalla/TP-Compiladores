@@ -1,4 +1,4 @@
 #!/bin/zsh
 
 ./generateParser.sh && \
-mvn package -f ../../pom.xml
+mvn clean package -f ../../pom.xml

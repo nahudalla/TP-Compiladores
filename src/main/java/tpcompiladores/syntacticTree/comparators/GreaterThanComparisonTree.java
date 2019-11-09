@@ -1,6 +1,5 @@
 package tpcompiladores.syntacticTree.comparators;
 
-import tpcompiladores.syntacticTree.ComparisonTree;
 import tpcompiladores.syntacticTree.SyntacticTree;
 
 public class GreaterThanComparisonTree extends ComparisonTree {

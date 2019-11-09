@@ -1,10 +1,12 @@
-package tpcompiladores.syntacticTree;
+package tpcompiladores.syntacticTree.operators;
 
 import tpcompiladores.conversions.ConversionIntToLong;
 import tpcompiladores.conversions.ConversionMatrix;
 import tpcompiladores.conversions.ConversionMatrixCell;
 import tpcompiladores.conversions.EmptyConversion;
 import tpcompiladores.symbolsTable.Type;
+import tpcompiladores.syntacticTree.SyntacticTree;
+import tpcompiladores.syntacticTree.conversions.SyntacticTreeWithConversions;
 
 public class MultiplicationTree extends SyntacticTreeWithConversions {
     private static final ConversionMatrix matrix = new ConversionMatrix();

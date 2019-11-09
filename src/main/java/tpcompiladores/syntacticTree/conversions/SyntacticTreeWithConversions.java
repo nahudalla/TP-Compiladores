@@ -1,9 +1,10 @@
-package tpcompiladores.syntacticTree;
+package tpcompiladores.syntacticTree.conversions;
 
 import tpcompiladores.conversions.ConversionMatrix;
 import tpcompiladores.symbolsTable.Type;
+import tpcompiladores.syntacticTree.SyntacticTree;
 
-public class SyntacticTreeWithConversions extends SyntacticTree{
+public class SyntacticTreeWithConversions extends SyntacticTree {
     private Type resultType = null;
 
     protected SyntacticTreeWithConversions(ConversionMatrix conversionMatrix, SyntacticTree leftTree, SyntacticTree rightTree) {
