@@ -23,8 +23,12 @@ public abstract class SyntacticTree {
         this.print(new TreePrinter(stream));
     }
 
-    protected void print(TreePrinter printer) {
+    protected void printSelf (TreePrinter printer) {
         printer.printClass(this);
+    }
+
+    protected void print(TreePrinter printer) {
+        this.printSelf(printer);
         this.printChildren(printer);
     }
 

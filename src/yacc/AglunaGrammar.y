@@ -29,7 +29,7 @@ programa
 
 lista_sentencias_declarativas
   : sentencia_declarativa lista_sentencias_declarativas
-  | /* empty */;
+  | /* empty */ { $$ = new ParserVal(); };
 
 sentencia_declarativa : opciones_sentencia_declarativa ';';
 
@@ -44,6 +44,7 @@ declaracion_variables
 declaracion_variable
   : capturar_numero_linea tipo_var lista_identificadores
 {
+  $$ = $3;
   SymbolsTableEntry.setUse($3.tableRefs, SymbolsTableEntryUse.VARIABLE);
   SymbolsTableEntry.setType($3.tableRefs, new Type($2.type.getName()));
   logSyntacticStructure($1.ival, "Declaracion de variables");
@@ -67,7 +68,7 @@ lista_identificadores
 
 sentencia_ejecutable
   : bloque_lista_sentencias
-  | /* empty */;
+  | /* empty */ { $$ = new ParserVal(); };
 
 bloque_lista_sentencias
   : BEGIN capturar_numero_linea lista_sentencias END
@@ -77,12 +78,8 @@ bloque_lista_sentencias
 };
 
 lista_sentencias
-  : sentencia lista_sentencias {
-  System.out.println($1.tree);
-  System.out.println($2.tree);
-  $$.tree = new SentenceTree($1.tree, $2.tree);
-}
-  | /* empty */ { $$.tree = null; };
+  : sentencia lista_sentencias { $$.tree = new SentenceTree($1.tree, $2.tree); }
+  | /* empty */ { $$ = new ParserVal(); };
 
 sentencia
   : capturar_numero_linea opciones_sentencia ';' { $$ = $2; logSyntacticStructure($1.ival, $2.sval); }
@@ -114,7 +111,7 @@ bloque_if
 
 else_if
   : ELSE bloque_sentencias { $$.tree = $2.tree; $$.sval = " (con else)";}
-  | /* empty */;
+  | /* empty */ { $$ = new ParserVal(); };
 
 bloque_sentencias
   : sentencia
@@ -137,12 +134,12 @@ sentencia_print
 expresion
   : expresion '+' termino { $$.tree = new AdditionTree($1.tree, $3.tree); }
   | expresion '-' termino { $$.tree = new SubtractionTree($1.tree, $3.tree); }
-  | termino ;
+  | termino;
 
 termino
   : termino '*' factor { $$.tree = new MultiplicationTree($1.tree, $3.tree); }
   | termino '/' factor { $$.tree = new DivisionTree($1.tree, $3.tree); }
-  | factor ;
+  | factor;
 
 factor
   : ID { $$.tree = new LeafTree($1.tableRef); }
@@ -161,7 +158,7 @@ number
 
 number_negation
   : '-' {$$.bval = true;}
-  | /* empty */;
+  | /* empty */ { $$ = new ParserVal(); };
 
 declaracion_clase
   : CLASS ID capturar_numero_linea extends_clase BEGIN declaraciones_cuerpo_clase END
@@ -191,13 +188,13 @@ declaracion_clase
   logSyntacticStructure($2.ival, "Declaracion clase" + withExtends);
 };
 
-extends_clase : EXTENDS lista_identificadores | /* empty */;
+extends_clase : EXTENDS lista_identificadores | /* empty */ { $$ = new ParserVal(); };
 
 declaraciones_cuerpo_clase
   : declaracion_variables ';' declaraciones_cuerpo_clase { $$ = $3; $3.tableRefs.addAll($1.tableRefs); }
   | declaracion_metodo ';' declaraciones_cuerpo_clase { $$ = $3; $3.tableRefs.add($1.tableRef); }
   | error ';' declaraciones_cuerpo_clase { $$ = $3; yyerror("Error en declaracion de miembro de clase"); }
-  | /* empty */ { $$.tableRefs = new ArrayList<>(); };
+  | /* empty */ { $$ = new ParserVal(); $$.tableRefs = new ArrayList<>(); };
 
 declaracion_metodo
   : capturar_numero_linea VOID ID '(' ')' bloque_lista_sentencias
@@ -218,7 +215,10 @@ ref_miembro_clase
 };
 
 asignacion
-  : izq_asignacion ASSIGNMENT expresion { $$.tree = new AssignmentTree($1.tree, $3.tree); $$.sval = "Asignacion"; }
+  : izq_asignacion ASSIGNMENT expresion {
+    $$.tree = new AssignmentTree($1.tree, $3.tree);
+    $$.sval = "Asignacion";
+}
   | izq_asignacion ASSIGNMENT { yyerror("Falta parte derecha de asignacion"); }
   | izq_asignacion ASSIGNMENT error { yyerror("Error en parte derecha de asignacion."); };
 
@@ -239,12 +239,12 @@ condicion
   | '(' error ')' { yyerror("Comparacion invalida"); };
 
 comparacion
-  : expresion LESS_OR_EQUAL expresion { $$.tree = new LessOrEqualComparisonTree($1.tree, $2.tree); }
-  | expresion NOT_EQUAL expresion { $$.tree = new NotEqualComparisonTree($1.tree, $2.tree); }
-  | expresion GREATER_OR_EQUAL expresion { $$.tree = new GreaterOrEqualComparisonTree($1.tree, $2.tree); }
-  | expresion EQUALS expresion { $$.tree = new EqualsComparisonTree($1.tree, $2.tree); }
-  | expresion '<' expresion { $$.tree = new LessThanComparisonTree($1.tree, $2.tree); }
-  | expresion '>' expresion { $$.tree = new GreaterThanComparisonTree($1.tree, $2.tree); }
+  : expresion LESS_OR_EQUAL expresion { $$.tree = new LessOrEqualComparisonTree($1.tree, $3.tree); }
+  | expresion NOT_EQUAL expresion { $$.tree = new NotEqualComparisonTree($1.tree, $3.tree); }
+  | expresion GREATER_OR_EQUAL expresion { $$.tree = new GreaterOrEqualComparisonTree($1.tree, $3.tree); }
+  | expresion EQUALS expresion { $$.tree = new EqualsComparisonTree($1.tree, $3.tree); }
+  | expresion '<' expresion { $$.tree = new LessThanComparisonTree($1.tree, $3.tree); }
+  | expresion '>' expresion { $$.tree = new GreaterThanComparisonTree($1.tree, $3.tree); }
 ;
 
 %%
@@ -307,7 +307,6 @@ private SymbolsTableEntry processNumericConstant (boolean isNegated, SymbolsTabl
 }
 
 public ParsingResult parse () {
-  this.yydebug=true;
     int code = this.yyparse();
 
     return new ParsingResult(code, this.syntacticTree);

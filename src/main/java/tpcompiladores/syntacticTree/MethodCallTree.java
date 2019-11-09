@@ -4,19 +4,9 @@ import tpcompiladores.Logger;
 import tpcompiladores.symbolsTable.SymbolsTableEntry;
 import tpcompiladores.symbolsTable.SymbolsTableEntryUse;
 
-public class MethodCallTree extends SyntacticTree {
-    private SymbolsTableEntry tableEntry = null;
-
+public class MethodCallTree extends LeafTree {
     private MethodCallTree(SymbolsTableEntry methodTableEntry) {
-        this.tableEntry = methodTableEntry;
-    }
-
-    public SymbolsTableEntry getTableEntry() {
-        return tableEntry;
-    }
-
-    public void setTableEntry(SymbolsTableEntry tableEntry) {
-        this.tableEntry = tableEntry;
+        super(methodTableEntry);
     }
 
     public static MethodCallTree create(SymbolsTableEntry methodTableEntry) {

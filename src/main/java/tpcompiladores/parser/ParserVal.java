@@ -15,16 +15,16 @@ public class ParserVal {
   public Type type;
   public List<SymbolsTableEntry> tableRefs;
 
-  public ParserVal shallowClone (ParserVal val) {
+  public ParserVal clone () {
     ParserVal v = new ParserVal();
 
-    v.bval = val.bval;
-    v.ival = val.ival;
-    v.sval = val.sval;
-    v.tableRef = val.tableRef;
-    v.tableRefs = val.tableRefs;
-    v.tree = val.tree;
-    v.type = val.type;
+    v.bval = this.bval;
+    v.ival = this.ival;
+    v.sval = this.sval;
+    v.tableRef = this.tableRef;
+    v.tableRefs = this.tableRefs;
+    v.tree = this.tree;
+    v.type = this.type;
 
     return v;
   }

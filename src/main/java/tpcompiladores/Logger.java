@@ -161,6 +161,8 @@ public class Logger {
         if (this.hasEmittedErrors()) return;
 
         this.logResultsSectionHeader("ARBOL SINTACTICO");
-        syntacticTree.print(System.out);
+
+        if (syntacticTree == null) System.out.println("ARBOL VACIO");
+        else syntacticTree.print(System.out);
 	}
 }

@@ -9,11 +9,29 @@ public class SyntacticTreeWithConversions extends SyntacticTree {
 
     protected SyntacticTreeWithConversions(ConversionMatrix conversionMatrix, SyntacticTree leftTree, SyntacticTree rightTree) {
         super(
-            conversionMatrix.getCell(leftTree.resultType(), rightTree.resultType()).getLeftConversion().convert(leftTree),
-            conversionMatrix.getCell(leftTree.resultType(), rightTree.resultType()).getRightConversion().convert(leftTree)
+            SyntacticTreeWithConversions.convertLeftTree(conversionMatrix, leftTree, rightTree),
+            SyntacticTreeWithConversions.convertRightTree(conversionMatrix, leftTree, rightTree)
         );
 
         this.resultType = conversionMatrix.getCell(leftTree.resultType(), rightTree.resultType()).getResult();
+    }
+
+    private static SyntacticTree convertLeftTree (ConversionMatrix matrix, SyntacticTree leftTree, SyntacticTree rightTree) {
+        Type leftType = leftTree.resultType();
+        Type rightType = rightTree.resultType();
+        return matrix
+            .getCell(leftType, rightType)
+            .getLeftConversion()
+            .convert(leftTree);
+    }
+
+    private static SyntacticTree convertRightTree (ConversionMatrix matrix, SyntacticTree leftTree, SyntacticTree rightTree) {
+        Type leftType = leftTree.resultType();
+        Type rightType = rightTree.resultType();
+        return matrix
+            .getCell(leftType, rightType)
+            .getRightConversion()
+            .convert(rightTree);
     }
 
     @Override

@@ -12,18 +12,30 @@ public class TreePrinter {
         this.stream = stream;
     }
 
-    public void printClass (SyntacticTree tree) {
+    public PrintStream getStream () {
+        return this.stream;
+    }
+
+    public void printIndentation () {
         for (int i = 0; i < this.indentationLevel; i++) {
             this.stream.print(" ");
         }
+    }
 
+    public void printClassName (SyntacticTree tree) {
         String className = tree.getClass().getName();
         className = className.substring(
             className.lastIndexOf(".") + 1
         );
         className = className.replaceAll("Tree$", "");
 
-        this.stream.println(className);
+        this.stream.print(className);
+    }
+
+    public void printClass (SyntacticTree tree) {
+        this.printIndentation();
+        this.printClassName(tree);
+        this.stream.println();
     }
 
     public void increaseIndentation () {

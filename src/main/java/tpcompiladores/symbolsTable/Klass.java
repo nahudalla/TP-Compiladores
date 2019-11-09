@@ -1,13 +1,9 @@
 package tpcompiladores.symbolsTable;
 
-import tpcompiladores.syntacticTree.SyntacticTree;
-
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 public class Klass {
     private String name;
@@ -23,6 +19,7 @@ public class Klass {
         for (SymbolsTableEntry member : members) {
             switch (member.getUse()) {
                 case ATTRIBUTE: this.addAttribute(member); break;
+                case VARIABLE: this.addAttribute(member); break;
                 case METHOD: this.addMethod(member); break;
                 default: throw new Error(
                     "Los miembros de una clase solo pueden ser ATTRIBUTE o METHOD. Se recibio: "
@@ -33,6 +30,7 @@ public class Klass {
     }
 
     private void addAttribute (SymbolsTableEntry attribute) {
+        attribute.setUse(SymbolsTableEntryUse.ATTRIBUTE);
         attribute.setKlass(this);
         this.attributes.put(attribute.getLexeme(), attribute);
     }

@@ -12,6 +12,17 @@ public class LeafTree extends SyntacticTree {
         this.symbolsTableReference = symbolsTableReference;
     }
 
+    public SymbolsTableEntry getSymbolsTableEntry () {
+        return this.getSymbolsTableEntry();
+    }
+
+    @Override
+    protected void printSelf(TreePrinter printer) {
+        printer.printIndentation();
+        printer.printClassName(this);
+        printer.getStream().println(" (" + this.symbolsTableReference.getIdentifier() + ")");
+    }
+
     @Override
     public Type resultType() {
         return this.symbolsTableReference.getType();
