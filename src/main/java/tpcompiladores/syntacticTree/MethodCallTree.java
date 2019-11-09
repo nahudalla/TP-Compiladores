@@ -1,31 +1,36 @@
 package tpcompiladores.syntacticTree;
 
-import tpcompiladores.CompilerContext;
-import tpcompiladores.parser.Klass;
+import tpcompiladores.Logger;
+import tpcompiladores.symbolsTable.SymbolsTableEntry;
+import tpcompiladores.symbolsTable.SymbolsTableEntryUse;
 
 public class MethodCallTree extends SyntacticTree {
-    private Klass klass;
-    private String methodName;
+    private SymbolsTableEntry tableEntry = null;
 
-    private MethodCallTree(Klass klass, String methodName) {
-        this.klass = klass;
-        this.methodName = methodName;
+    private MethodCallTree(SymbolsTableEntry methodTableEntry) {
+        this.tableEntry = methodTableEntry;
     }
 
-    private MethodCallTree() {
-        this.methodName = null;
-        this.klass = null;
+    public SymbolsTableEntry getTableEntry() {
+        return tableEntry;
     }
 
-    public static MethodCallTree create(CompilerContext compilerContext, Klass klass, String methodName){
-        if (klass.hasMethod(methodName)) {
-            return new MethodCallTree(klass, methodName);
+    public void setTableEntry(SymbolsTableEntry tableEntry) {
+        this.tableEntry = tableEntry;
+    }
+
+    public static MethodCallTree create(SymbolsTableEntry methodTableEntry) {
+        String methodName = methodTableEntry.getLexeme();
+
+        if (methodTableEntry.getUse().equals(SymbolsTableEntryUse.METHOD)) {
+            return new MethodCallTree(methodTableEntry);
         }
 
-        compilerContext.getLogger().logSemanticError(
-                "el metodo " + methodName + " no se encuentra en la clase " + klass.getName()
+        Logger.getInstance().logSemanticError(
+                methodName + " en la clase " + methodTableEntry.getKlass().getName()
+                + " no es un método, por lo que no se puede llamar."
         );
 
-        return new MethodCallTree();
+        return null;
     }
 }

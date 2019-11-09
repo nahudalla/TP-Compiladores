@@ -3,6 +3,7 @@ package tpcompiladores;
 import tpcompiladores.lexer.LineNumber;
 import tpcompiladores.lexer.TokenDisplayName;
 import tpcompiladores.symbolsTable.SymbolsTable;
+import tpcompiladores.syntacticTree.SyntacticTree;
 
 import java.io.PrintStream;
 
@@ -100,10 +101,14 @@ public class Logger {
         System.err.println(message);
     }
 
-    public void logSymbolsTable (SymbolsTable symbolsTable) {
+    private void logResultsSectionHeader (String name) {
         if (this.lastLoggedTokenLine != null) System.out.println();
         this.lastLoggedTokenLine = null;
-        System.out.println(ANSI_CYAN + "TABLA DE SIMBOLOS:" + ANSI_RESET);
+        System.out.println(ANSI_CYAN + name + ":" + ANSI_RESET);
+    }
+
+    public void logSymbolsTable (SymbolsTable symbolsTable) {
+        this.logResultsSectionHeader("TABLA DE SIMBOLOS");
         symbolsTable.print(System.out);
     }
 
@@ -148,5 +153,14 @@ public class Logger {
         this.lastLoggedTokenLine = this.lineNumber.getCurrentLineNumber();
     }
 
-    public void logSemanticError(String message) {}
+    public void logSemanticError(String message) {
+        this.logError("SEMANTICO", message);
+    }
+
+	public void logSyntacticTree(SyntacticTree syntacticTree) {
+        if (this.hasEmittedErrors()) return;
+
+        this.logResultsSectionHeader("ARBOL SINTACTICO");
+        syntacticTree.print(System.out);
+	}
 }

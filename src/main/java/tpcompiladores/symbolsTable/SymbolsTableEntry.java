@@ -2,18 +2,36 @@ package tpcompiladores.symbolsTable;
 
 import java.util.List;
 
+import tpcompiladores.syntacticTree.SyntacticTree;
+
 public class SymbolsTableEntry {
-    public static final String[] COLUMN_NAMES = {
-        "Identificador", "Lexema", "Tipo", "Uso"
-    };
+    public static final String[] COLUMN_NAMES = { "Identificador", "Lexema", "Tipo", "Uso" };
 
     private String identifier;
     private String lexeme;
     private Type type;
     private SymbolsTableEntryUse use;
+    private Klass klass;
+    private SyntacticTree tree;
 
     public String getIdentifier() {
         return this.identifier;
+    }
+
+    public SyntacticTree getTree() {
+        return tree;
+    }
+
+    public void setTree(SyntacticTree tree) {
+        this.tree = tree;
+    }
+
+    public Klass getKlass() {
+        return this.klass;
+    }
+
+    public void setKlass(Klass klass) {
+        this.klass = klass;
     }
 
     public SymbolsTableEntryUse getUse() {

@@ -6,6 +6,7 @@ import tpcompiladores.lexer.LineNumber;
 import tpcompiladores.lexer.fileInput.CharactersReader;
 import tpcompiladores.lexer.stateMachine.AglunaStateMachine;
 import tpcompiladores.lexer.stateMachine.StateMachine;
+import tpcompiladores.parser.ParsingResult;
 import tpcompiladores.parser.yacc_generated.Parser;
 import tpcompiladores.symbolsTable.SymbolsTable;
 
@@ -24,14 +25,18 @@ public class Compiler {
     }
 
     public void run () {
-        int code = this.context.getParser().parse();
+        ParsingResult result = this.context.getParser().parse();
 
-        if (code != 0) {
+        if (result.getCode() != 0) {
             this.context.getLogger().logParserError("Fallo en la etapa de parsing.");
         }
 
         this.context.getLogger().logSymbolsTable(
-               this.context.getSymbolsTable()
+            this.context.getSymbolsTable()
+        );
+
+        this.context.getLogger().logSyntacticTree(
+            result.getSyntacticTree()
         );
     }
 

@@ -2,15 +2,15 @@
 import tpcompiladores.CompilerConstants;
 import tpcompiladores.CompilerContext;
 import tpcompiladores.symbolsTable.*;
-import tpcompiladores.symbolsTable.Type;
 import tpcompiladores.syntacticTree.*;
 import tpcompiladores.syntacticTree.comparators.*;
 import tpcompiladores.syntacticTree.conversions.*;
 import tpcompiladores.syntacticTree.do_until.*;
 import tpcompiladores.syntacticTree.if_tree.*;
 import tpcompiladores.syntacticTree.operators.*;
-import tpcompiladores.parser.ParserVal;
+import tpcompiladores.parser.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.io.IOException;
 %}
 
@@ -21,124 +21,222 @@ import java.io.IOException;
 %%
 inicio : programa ;
 
-programa : lista_sentencias_declarativas sentencia_ejecutable ;
+programa
+  : lista_sentencias_declarativas sentencia_ejecutable
+{
+  syntacticTree = $2.tree;
+};
 
-lista_sentencias_declarativas : sentencia_declarativa lista_sentencias_declarativas | /* empty */ ;
+lista_sentencias_declarativas
+  : sentencia_declarativa lista_sentencias_declarativas
+  | /* empty */;
 
 sentencia_declarativa : opciones_sentencia_declarativa ';';
 
-opciones_sentencia_declarativa : declaracion_variables
-                               | declaracion_clase ;
+opciones_sentencia_declarativa
+  : declaracion_variables
+  | declaracion_clase ;
 
-declaracion_variables : declaracion_variable | declaracion_objeto;
+declaracion_variables
+  : declaracion_variable
+  | declaracion_objeto;
 
-declaracion_variable : capturar_numero_linea tipo_var lista_identificadores {
-    SymbolsTableEntry.setUse($3.tableRefs, SymbolsTableEntryUse.VARIABLE);
-    SymbolsTableEntry.setType($3.tableRefs, new Type($2.type.getName()));
-    logSyntacticStructure($1.ival, "Declaracion de variables");
+declaracion_variable
+  : capturar_numero_linea tipo_var lista_identificadores
+{
+  SymbolsTableEntry.setUse($3.tableRefs, SymbolsTableEntryUse.VARIABLE);
+  SymbolsTableEntry.setType($3.tableRefs, new Type($2.type.getName()));
+  logSyntacticStructure($1.ival, "Declaracion de variables");
 };
 
-tipo_var : INT { $$.type = Type.INT; }
-         | LONG  { $$.type = Type.LONG; }
-;
+tipo_var
+  : INT { $$.type = Type.INT; }
+  | LONG  { $$.type = Type.LONG; };
 
-declaracion_objeto : capturar_numero_linea ID lista_identificadores {
-    SymbolsTableEntry.setUse($3.tableRefs, SymbolsTableEntryUse.OBJECT);
-    SymbolsTableEntry.setType($3.tableRefs, new Type($2.tableRef.getLexeme()));
-    logSyntacticStructure($1.ival, "Declaracion de objetos");
+declaracion_objeto
+  : capturar_numero_linea ID lista_identificadores
+{
+  SymbolsTableEntry.setUse($3.tableRefs, SymbolsTableEntryUse.OBJECT);
+  SymbolsTableEntry.setType($3.tableRefs, new Type($2.tableRef.getLexeme()));
+  logSyntacticStructure($1.ival, "Declaracion de objetos");
 };
 
 lista_identificadores
   : ID { $$.tableRefs = new ArrayList<>(); $$.tableRefs.add($1.tableRef); }
   | ID ',' lista_identificadores { $$ = $3; $$.tableRefs.add($1.tableRef); };
 
-sentencia_ejecutable : bloque_lista_sentencias | /* empty */;
+sentencia_ejecutable
+  : bloque_lista_sentencias
+  | /* empty */;
 
-bloque_lista_sentencias : BEGIN capturar_numero_linea lista_sentencias END {
-    logSyntacticStructure($2.ival, "Bloque de sentencias");
-} ;
-
-lista_sentencias : sentencia lista_sentencias | /* empty */;
-
-sentencia : capturar_numero_linea opciones_sentencia ';' {logSyntacticStructure($1.ival, $2.sval);}
-          | error ';' { yyerror("Error en sentencia ejecutable"); };
-
-capturar_numero_linea : { $$.ival = getLineNumber(); };
-
-opciones_sentencia : bloque_do_until
-                   | bloque_if
-                   | sentencia_print
-                   | asignacion
-                   | llamada_metodo_clase;
-
-bloque_if : IF condicion bloque_sentencias else_if END_IF { $$.sval = "If" + $4.sval; }
-          | IF error END_IF { yyerror("Error en sentencia 'if'."); }
-          ;
-
-else_if : ELSE bloque_sentencias {$$.sval = " (con else)";} | /* empty */;
-
-bloque_sentencias : sentencia | bloque_lista_sentencias;
-
-bloque_do_until : DO bloque_sentencias UNTIL condicion {$$.sval = "Bloque 'do' 'until'";}
-                | DO error UNTIL condicion { yyerror("Error en sentencia 'do..until'"); }
-                | DO bloque_sentencias UNTIL error { yyerror("Error en comparacion de 'do..until'"); }
-                | DO error UNTIL error { yyerror("Error en sentencia 'do..until'"); };
-
-sentencia_print : PRINT '(' CONST_STRING ')' { $$.sval = "Print"; }
-                | PRINT error { yyerror("Error en sentencia 'print'"); };
-
-expresion : expresion '+' termino | expresion '-' termino | termino ;
-
-termino : termino '*' factor | termino '/' factor | factor ;
-
-factor : ID { $$.tree = new LeafTree($1.tableRef); }
-       | number
-       | ref_miembro_clase ;
-
-number : capturar_numero_linea number_negation NUMERIC_CONST {
-    SymbolsTableEntry entry = processNumericConstant($2.bval, $3.tableRef);
-
-    $$.tree = new LeafTree(entry);
-
-    logSyntacticStructure($1.ival, "Constante " + entry.getType() + ": " + entry.getLexeme());
+bloque_lista_sentencias
+  : BEGIN capturar_numero_linea lista_sentencias END
+{
+  $$ = $3;
+  logSyntacticStructure($2.ival, "Bloque de sentencias");
 };
 
-number_negation : '-' {$$.bval = true;} | /* empty */;
+lista_sentencias
+  : sentencia lista_sentencias {
+  System.out.println($1.tree);
+  System.out.println($2.tree);
+  $$.tree = new SentenceTree($1.tree, $2.tree);
+}
+  | /* empty */ { $$.tree = null; };
 
-declaracion_clase : header_clase capturar_numero_linea cuerpo_clase { logSyntacticStructure($2.ival, "Declaracion clase"); }
-                  | header_clase capturar_numero_linea extends_clase cuerpo_clase { logSyntacticStructure($2.ival, "Declaracion clase (con extends)"); } ;
+sentencia
+  : capturar_numero_linea opciones_sentencia ';' { $$ = $2; logSyntacticStructure($1.ival, $2.sval); }
+  | error ';' { yyerror("Error en sentencia ejecutable"); };
 
-header_clase : CLASS ID ;
+capturar_numero_linea
+  : { $$.ival = getLineNumber(); };
 
-extends_clase : EXTENDS lista_identificadores;
+opciones_sentencia
+  : bloque_do_until
+  | bloque_if
+  | sentencia_print
+  | asignacion
+  | llamada_metodo_clase;
 
-cuerpo_clase : BEGIN declaraciones_cuerpo_clase END ;
+bloque_if
+  : IF condicion bloque_sentencias else_if END_IF
+{
+  $$.tree = new IfTree(
+      new IfComparisonTree($2.tree),
+      new IfBranchesTree(
+          new IfThenBranchTree($3.tree),
+          new IfElseBranchTree($4.tree)
+      )
+  );
+  $$.sval = "If" + $4.sval;
+}
+  | IF error END_IF { yyerror("Error en sentencia 'if'."); };
 
-declaraciones_cuerpo_clase : declaracion_cuerpo_clase declaraciones_cuerpo_clase | /* empty */ ;
+else_if
+  : ELSE bloque_sentencias { $$.tree = $2.tree; $$.sval = " (con else)";}
+  | /* empty */;
 
-declaracion_cuerpo_clase : declaracion_variables ';'
-                         | declaracion_metodos ';'
-                         | error ';' { yyerror("Error en declaracion de miembro de clase"); };
+bloque_sentencias
+  : sentencia
+  | bloque_lista_sentencias;
 
-declaracion_metodos : capturar_numero_linea VOID ID '(' ')' bloque_lista_sentencias {logSyntacticStructure($1.ival, "Declaracion de metodo de clase");};
+bloque_do_until
+  : DO bloque_sentencias UNTIL condicion
+{
+  $$.tree = new DoUntilTree($2.tree, new DoUntilComparisonTree($4.tree));
+  $$.sval = "Bloque 'do' 'until'";
+}
+  | DO error UNTIL condicion { yyerror("Error en sentencia 'do..until'"); }
+  | DO bloque_sentencias UNTIL error { yyerror("Error en comparacion de 'do..until'"); }
+  | DO error UNTIL error { yyerror("Error en sentencia 'do..until'"); };
 
-ref_miembro_clase :  ID capturar_numero_linea '.' ID  {logSyntacticStructure($2.ival, "Referencia a miembro de clase");};
+sentencia_print
+  : PRINT '(' CONST_STRING ')' { $$.tree = new PrintTree(new LeafTree($3.tableRef)); $$.sval = "Print"; }
+  | PRINT error { yyerror("Error en sentencia 'print'"); };
 
-asignacion : izq_asignacion ASSIGNMENT expresion { $$.sval = "Asignacion"; }
-           | izq_asignacion ASSIGNMENT { yyerror("Falta parte derecha de asignacion"); }
-           | izq_asignacion ASSIGNMENT error { yyerror("Error en parte derecha de asignacion."); };
+expresion
+  : expresion '+' termino { $$.tree = new AdditionTree($1.tree, $3.tree); }
+  | expresion '-' termino { $$.tree = new SubtractionTree($1.tree, $3.tree); }
+  | termino ;
 
-izq_asignacion : ID | ref_miembro_clase ;
+termino
+  : termino '*' factor { $$.tree = new MultiplicationTree($1.tree, $3.tree); }
+  | termino '/' factor { $$.tree = new DivisionTree($1.tree, $3.tree); }
+  | factor ;
 
-llamada_metodo_clase : ref_miembro_clase '(' ')' { $$.sval = "Llamada a metodo de clase"; }
-                     | ref_miembro_clase '(' error { yyerror("Error en llamada a metodo de clase"); };
+factor
+  : ID { $$.tree = new LeafTree($1.tableRef); }
+  | number
+  | ref_miembro_clase ;
 
-condicion : '(' comparacion ')' { $$ = $2; logSyntacticStructure(getLineNumber(), "Condicion"); }
-          | comparacion ')' { yyerror("Falta parentesis de inicio de condicion"); }
-          | '(' comparacion { yyerror("Falta parentesis de cierre de condicion"); }
-          | '(' ')' { yyerror("Falta comparacion"); }
-          | comparacion { yyerror("Faltan los parentesis para la comparacion"); }
-          | '(' error ')' { yyerror("Comparacion invalida"); };
+number
+  : capturar_numero_linea number_negation NUMERIC_CONST
+{
+  SymbolsTableEntry entry = processNumericConstant($2.bval, $3.tableRef);
+
+  $$.tree = new LeafTree(entry);
+
+  logSyntacticStructure($1.ival, "Constante " + entry.getType() + ": " + entry.getLexeme());
+};
+
+number_negation
+  : '-' {$$.bval = true;}
+  | /* empty */;
+
+declaracion_clase
+  : CLASS ID capturar_numero_linea extends_clase BEGIN declaraciones_cuerpo_clase END
+{
+  Klass klass = new Klass($2.tableRef.getLexeme());
+
+  $2.tableRef.setUse(SymbolsTableEntryUse.CLASS);
+  $2.tableRef.setKlass(klass);
+
+  List<SymbolsTableEntry> extends_entries = $4.tableRefs;
+  String withExtends = "";
+
+  if (extends_entries != null) {
+    withExtends = " (con extends)";
+    Klass[] klasses = new Klass[extends_entries.size()];
+    int i = 0;
+
+    for (SymbolsTableEntry entry : extends_entries) {
+      klasses[i++] = entry.getKlass();
+    }
+
+    klass.setExtendedClasses(klasses);
+  }
+
+  klass.setMembers($6.tableRefs);
+
+  logSyntacticStructure($2.ival, "Declaracion clase" + withExtends);
+};
+
+extends_clase : EXTENDS lista_identificadores | /* empty */;
+
+declaraciones_cuerpo_clase
+  : declaracion_variables ';' declaraciones_cuerpo_clase { $$ = $3; $3.tableRefs.addAll($1.tableRefs); }
+  | declaracion_metodo ';' declaraciones_cuerpo_clase { $$ = $3; $3.tableRefs.add($1.tableRef); }
+  | error ';' declaraciones_cuerpo_clase { $$ = $3; yyerror("Error en declaracion de miembro de clase"); }
+  | /* empty */ { $$.tableRefs = new ArrayList<>(); };
+
+declaracion_metodo
+  : capturar_numero_linea VOID ID '(' ')' bloque_lista_sentencias
+{
+  $3.tableRef.setUse(SymbolsTableEntryUse.METHOD);
+  $3.tableRef.setTree($6.tree);
+
+  logSyntacticStructure($1.ival, "Declaracion de metodo de clase");
+};
+
+ref_miembro_clase
+  : ID capturar_numero_linea '.' ID
+{
+  $$.tableRef = $4.tableRef;
+  $$.tree = new LeafTree($4.tableRef);
+
+  logSyntacticStructure($2.ival, "Referencia a miembro de clase");
+};
+
+asignacion
+  : izq_asignacion ASSIGNMENT expresion { $$.tree = new AssignmentTree($1.tree, $3.tree); $$.sval = "Asignacion"; }
+  | izq_asignacion ASSIGNMENT { yyerror("Falta parte derecha de asignacion"); }
+  | izq_asignacion ASSIGNMENT error { yyerror("Error en parte derecha de asignacion."); };
+
+izq_asignacion
+  : ID { $$.tree = new LeafTree($1.tableRef); }
+  | ref_miembro_clase ;
+
+llamada_metodo_clase
+  : ref_miembro_clase '(' ')' { $$.tree = MethodCallTree.create($1.tableRef); $$.sval = "Llamada a metodo de clase"; }
+  | ref_miembro_clase '(' error { yyerror("Error en llamada a metodo de clase"); };
+
+condicion
+  : '(' comparacion ')' { $$ = $2; logSyntacticStructure(getLineNumber(), "Condicion"); }
+  | comparacion ')' { yyerror("Falta parentesis de inicio de condicion"); }
+  | '(' comparacion { yyerror("Falta parentesis de cierre de condicion"); }
+  | '(' ')' { yyerror("Falta comparacion"); }
+  | comparacion { yyerror("Faltan los parentesis para la comparacion"); }
+  | '(' error ')' { yyerror("Comparacion invalida"); };
 
 comparacion
   : expresion LESS_OR_EQUAL expresion { $$.tree = new LessOrEqualComparisonTree($1.tree, $2.tree); }
@@ -153,6 +251,7 @@ comparacion
 public static final short EOF = 0;
 
 private CompilerContext context;
+private SyntacticTree syntacticTree;
 
 public Parser (CompilerContext context) {
     this.context = context;
@@ -207,8 +306,11 @@ private SymbolsTableEntry processNumericConstant (boolean isNegated, SymbolsTabl
     return symbolsTable.getEntry(symbolsTableReference);
 }
 
-public int parse () {
-    return this.yyparse();
+public ParsingResult parse () {
+  this.yydebug=true;
+    int code = this.yyparse();
+
+    return new ParsingResult(code, this.syntacticTree);
 }
 
 int yylex () {
