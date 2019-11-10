@@ -19,7 +19,25 @@ public abstract class SyntacticTree {
         this.leftTree = leftTree;
     }
 
-    public void print (PrintStream stream) {   }
+    public void print (PrintStream stream) {
+        this.print(new TreePrinter(stream));
+    }
+
+    protected void printSelf (TreePrinter printer) {
+        printer.printClass(this);
+    }
+
+    protected void print(TreePrinter printer) {
+        this.printSelf(printer);
+        this.printChildren(printer);
+    }
+
+    protected void printChildren (TreePrinter printer) {
+        printer.increaseIndentation();
+        if (this.leftTree != null) this.leftTree.print(printer);
+        if (this.rightTree != null) this.rightTree.print(printer);
+        printer.decreaseIndentation();
+    }
 
     protected SyntacticTree leftMostNodeWithLeaves () {
         return null;

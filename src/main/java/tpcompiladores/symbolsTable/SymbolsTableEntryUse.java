@@ -5,5 +5,6 @@ public enum SymbolsTableEntryUse {
     OBJECT,
     CLASS,
     METHOD,
-    CONSTANT
+    CONSTANT,
+    ATTRIBUTE
 }

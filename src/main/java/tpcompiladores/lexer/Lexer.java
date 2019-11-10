@@ -2,6 +2,7 @@ package tpcompiladores.lexer;
 
 import tpcompiladores.CompilerContext;
 import tpcompiladores.lexer.stateMachine.StateMachine;
+import tpcompiladores.symbolsTable.SymbolsTableEntry;
 
 import java.io.IOException;
 
@@ -50,6 +51,7 @@ public class Lexer {
     public void setNextToken(int nextToken, String symbolsTableReference){
         this.nextToken = nextToken;
         this.symbolsTableReference = symbolsTableReference;
-        this.compilerContext.getParser().setSymbolsTableReference(symbolsTableReference);
+        SymbolsTableEntry tableReference = this.compilerContext.getSymbolsTable().getEntry(symbolsTableReference);
+        this.compilerContext.getParser().setSymbolsTableReference(tableReference);
     }
 }

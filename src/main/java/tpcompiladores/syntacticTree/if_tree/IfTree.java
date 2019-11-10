@@ -1,6 +1,6 @@
-package tpcompiladores.syntacticTree;
+package tpcompiladores.syntacticTree.if_tree;
 
-import tpcompiladores.symbolsTable.Type;
+import tpcompiladores.syntacticTree.SyntacticTree;
 
 public class IfTree extends SyntacticTree {
     public IfTree(IfComparisonTree leftTree, IfBranchesTree rightTree) {

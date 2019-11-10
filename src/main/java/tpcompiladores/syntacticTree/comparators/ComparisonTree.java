@@ -1,6 +1,7 @@
-package tpcompiladores.syntacticTree;
+package tpcompiladores.syntacticTree.comparators;
 
-import tpcompiladores.symbolsTable.Type;
+import tpcompiladores.syntacticTree.SyntacticTree;
+import tpcompiladores.syntacticTree.conversions.SmallResultTypeTree;
 
 public class ComparisonTree extends SmallResultTypeTree {
     public ComparisonTree(SyntacticTree leftTree, SyntacticTree rightTree) {
