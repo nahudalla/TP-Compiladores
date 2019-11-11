@@ -31,7 +31,9 @@ lista_sentencias_declarativas
   : sentencia_declarativa lista_sentencias_declarativas
   | /* empty */ { $$ = new ParserVal(); };
 
-sentencia_declarativa : opciones_sentencia_declarativa ';';
+sentencia_declarativa
+  : opciones_sentencia_declarativa ';'
+  | error ';' { yyerror("Error en sentencia declarativa."); };
 
 opciones_sentencia_declarativa
   : declaracion_variables
@@ -59,6 +61,7 @@ declaracion_objeto
 {
   SymbolsTableEntry.setUse($3.tableRefs, SymbolsTableEntryUse.OBJECT);
   SymbolsTableEntry.setType($3.tableRefs, new Type($2.tableRef.getLexeme()));
+  SymbolsTableEntry.setKlass($3.tableRefs, $2.tableRef.getKlass());
   logSyntacticStructure($1.ival, "Declaracion de objetos");
 };
 
@@ -128,7 +131,12 @@ bloque_do_until
   | DO error UNTIL error { yyerror("Error en sentencia 'do..until'"); };
 
 sentencia_print
-  : PRINT '(' CONST_STRING ')' { $$.tree = new PrintTree(new LeafTree($3.tableRef)); $$.sval = "Print"; }
+  : PRINT '(' CONST_STRING ')'
+{
+  $3.tableRef.setUse(SymbolsTableEntryUse.CONSTANT);
+  $$.tree = new PrintTree(new LeafTree($3.tableRef));
+  $$.sval = "Print";
+}
   | PRINT error { yyerror("Error en sentencia 'print'"); };
 
 expresion
@@ -144,12 +152,13 @@ termino
 factor
   : ID { $$.tree = new LeafTree($1.tableRef); }
   | number
-  | ref_miembro_clase ;
+  | ref_atributo_clase ;
 
 number
   : capturar_numero_linea number_negation NUMERIC_CONST
 {
   SymbolsTableEntry entry = processNumericConstant($2.bval, $3.tableRef);
+  entry.setUse(SymbolsTableEntryUse.CONSTANT);
 
   $$.tree = new LeafTree(entry);
 
@@ -161,7 +170,8 @@ number_negation
   | /* empty */ { $$ = new ParserVal(); };
 
 declaracion_clase
-  : CLASS ID capturar_numero_linea extends_clase BEGIN declaraciones_cuerpo_clase END
+  : CLASS error { yyerror("Error en declaracion de clase."); }
+  | CLASS ID capturar_numero_linea extends_clase BEGIN declaraciones_cuerpo_clase END
 {
   Klass klass = new Klass($2.tableRef.getLexeme());
 
@@ -188,7 +198,9 @@ declaracion_clase
   logSyntacticStructure($2.ival, "Declaracion clase" + withExtends);
 };
 
-extends_clase : EXTENDS lista_identificadores | /* empty */ { $$ = new ParserVal(); };
+extends_clase
+  : EXTENDS lista_identificadores { $$ = $2; }
+  | /* empty */ { $$ = new ParserVal(); };
 
 declaraciones_cuerpo_clase
   : declaracion_variables ';' declaraciones_cuerpo_clase { $$ = $3; $3.tableRefs.addAll($1.tableRefs); }
@@ -199,8 +211,9 @@ declaraciones_cuerpo_clase
 declaracion_metodo
   : capturar_numero_linea VOID ID '(' ')' bloque_lista_sentencias
 {
-  $3.tableRef.setUse(SymbolsTableEntryUse.METHOD);
-  $3.tableRef.setTree($6.tree);
+  $$.tableRef = $3.tableRef;
+  $$.tableRef.setUse(SymbolsTableEntryUse.METHOD);
+  $$.tableRef.setTree($6.tree);
 
   logSyntacticStructure($1.ival, "Declaracion de metodo de clase");
 };
@@ -209,10 +222,18 @@ ref_miembro_clase
   : ID capturar_numero_linea '.' ID
 {
   $$.tableRef = $4.tableRef;
-  $$.tree = new LeafTree($4.tableRef);
 
-  logSyntacticStructure($2.ival, "Referencia a miembro de clase");
-};
+  if (!$1.tableRef.isObject()) {
+    logSemanticError("El identificador '" + $1.tableRef.getLexeme() + "' no es un objeto.");
+  } else if (!$1.tableRef.getKlass().hasMember($4.tableRef)) {
+    logSemanticError(
+      "El identificador '"+$4.tableRef.getLexeme()+
+      "' no es miembro de la clase '"+$1.tableRef.getKlass().getName()+"'."
+    );
+  }
+}
+
+ref_atributo_clase : ref_miembro_clase { $$.tree = new AttributeReferenceTree($1.tableRef); }
 
 asignacion
   : izq_asignacion ASSIGNMENT expresion {
@@ -224,7 +245,7 @@ asignacion
 
 izq_asignacion
   : ID { $$.tree = new LeafTree($1.tableRef); }
-  | ref_miembro_clase ;
+  | ref_atributo_clase ;
 
 llamada_metodo_clase
   : ref_miembro_clase '(' ')' { $$.tree = new MethodCallTree($1.tableRef); $$.sval = "Llamada a metodo de clase"; }
@@ -258,8 +279,8 @@ public Parser (CompilerContext context) {
     context.setParser(this);
 }
 
-private void logWarning (String message) {
-    this.context.getLogger().logParserWarning(message);
+private void logSemanticError (String message) {
+    this.context.getLogger().logSemanticError(message);
 }
 
 private int getLineNumber () {

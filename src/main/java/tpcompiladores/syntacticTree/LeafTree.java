@@ -5,15 +5,15 @@ import tpcompiladores.symbolsTable.SymbolsTableEntry;
 import tpcompiladores.symbolsTable.Type;
 
 public class LeafTree extends SyntacticTree {
-    private SymbolsTableEntry symbolsTableReference;
+    protected SymbolsTableEntry symbolsTableReference;
 
     public LeafTree(SymbolsTableEntry symbolsTableReference) {
         super(null, null);
 
         if(symbolsTableReference.getUse() == null) {
             Logger.getInstance().logSemanticError(
-                    "El identificador " +
-                    symbolsTableReference.getLexeme() + " no ha sido declarado"
+                    "El identificador '" +
+                    symbolsTableReference.getLexeme() + "' no ha sido declarado"
             );
             this.symbolsTableReference = null;
         } else {
