@@ -227,7 +227,7 @@ izq_asignacion
   | ref_miembro_clase ;
 
 llamada_metodo_clase
-  : ref_miembro_clase '(' ')' { $$.tree = MethodCallTree.create($1.tableRef); $$.sval = "Llamada a metodo de clase"; }
+  : ref_miembro_clase '(' ')' { $$.tree = new MethodCallTree($1.tableRef); $$.sval = "Llamada a metodo de clase"; }
   | ref_miembro_clase '(' error { yyerror("Error en llamada a metodo de clase"); };
 
 condicion

@@ -7,6 +7,7 @@ public class Type {
     public static final Type INT = new Type("int");
     public static final Type LONG = new Type("long");
     public static final Type INVALID = new Type("_invalid");
+    public static final Type ERROR = new Type("_error");
 
     public Type(String name) {
         this.name = name;

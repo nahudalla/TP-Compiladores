@@ -154,7 +154,7 @@ public class Logger {
     }
 
     public void logSemanticError(String message) {
-        this.logError("SEMANTICO", message);
+        this.logError("SEMANTIC", message);
     }
 
 	public void logSyntacticTree(SyntacticTree syntacticTree) {

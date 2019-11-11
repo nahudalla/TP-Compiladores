@@ -1,5 +1,6 @@
 package tpcompiladores.syntacticTree;
 
+import tpcompiladores.Logger;
 import tpcompiladores.symbolsTable.SymbolsTableEntry;
 import tpcompiladores.symbolsTable.Type;
 
@@ -9,7 +10,15 @@ public class LeafTree extends SyntacticTree {
     public LeafTree(SymbolsTableEntry symbolsTableReference) {
         super(null, null);
 
-        this.symbolsTableReference = symbolsTableReference;
+        if(symbolsTableReference.getUse() == null) {
+            Logger.getInstance().logSemanticError(
+                    "El identificador " +
+                    symbolsTableReference.getLexeme() + " no ha sido declarado"
+            );
+            this.symbolsTableReference = null;
+        } else {
+            this.symbolsTableReference = symbolsTableReference;
+        }
     }
 
     public SymbolsTableEntry getSymbolsTableEntry () {
@@ -25,6 +34,8 @@ public class LeafTree extends SyntacticTree {
 
     @Override
     public Type resultType() {
+        if (this.symbolsTableReference == null) return Type.INVALID;
+
         return this.symbolsTableReference.getType();
     }
 }

@@ -3,24 +3,17 @@ package tpcompiladores.syntacticTree;
 import tpcompiladores.Logger;
 import tpcompiladores.symbolsTable.SymbolsTableEntry;
 import tpcompiladores.symbolsTable.SymbolsTableEntryUse;
+import tpcompiladores.symbolsTable.Type;
 
 public class MethodCallTree extends LeafTree {
-    private MethodCallTree(SymbolsTableEntry methodTableEntry) {
+    public MethodCallTree(SymbolsTableEntry methodTableEntry) {
         super(methodTableEntry);
-    }
 
-    public static MethodCallTree create(SymbolsTableEntry methodTableEntry) {
-        String methodName = methodTableEntry.getLexeme();
-
-        if (methodTableEntry.getUse().equals(SymbolsTableEntryUse.METHOD)) {
-            return new MethodCallTree(methodTableEntry);
+        if (!this.resultType().equals(Type.INVALID) && !SymbolsTableEntryUse.METHOD.equals(methodTableEntry.getUse())) {
+            Logger.getInstance().logSemanticError(
+                    methodTableEntry.getLexeme() + " en la clase " + methodTableEntry.getKlass().getName()
+                            + " no es un metodo, por lo que no se puede llamar."
+            );
         }
-
-        Logger.getInstance().logSemanticError(
-                methodName + " en la clase " + methodTableEntry.getKlass().getName()
-                + " no es un método, por lo que no se puede llamar."
-        );
-
-        return null;
     }
 }

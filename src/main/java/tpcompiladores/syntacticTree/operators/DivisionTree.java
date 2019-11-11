@@ -5,6 +5,6 @@ import tpcompiladores.syntacticTree.conversions.SmallResultTypeTree;
 
 public class DivisionTree extends SmallResultTypeTree {
     public DivisionTree(SyntacticTree leftTree, SyntacticTree rightTree) {
-        super(leftTree, rightTree);
+        super("Division", leftTree, rightTree);
     }
 }

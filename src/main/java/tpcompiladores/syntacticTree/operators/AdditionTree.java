@@ -5,6 +5,6 @@ import tpcompiladores.syntacticTree.conversions.SmallResultTypeTree;
 
 public class AdditionTree extends SmallResultTypeTree {
     public AdditionTree(SyntacticTree leftTree, SyntacticTree rightTree) {
-        super(leftTree, rightTree);
+        super("Suma", leftTree, rightTree);
     }
 }

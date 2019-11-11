@@ -12,7 +12,7 @@ public class MultiplicationTree extends SyntacticTreeWithConversions {
     private static final ConversionMatrix matrix = new ConversionMatrix();
 
     public MultiplicationTree(SyntacticTree leftTree, SyntacticTree rightTree) {
-        super(MultiplicationTree.matrix, leftTree, rightTree);
+        super("Multiplicacion", MultiplicationTree.matrix, leftTree, rightTree);
     }
 
     static {
