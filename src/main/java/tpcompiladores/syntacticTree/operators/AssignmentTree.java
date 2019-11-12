@@ -1,9 +1,6 @@
 package tpcompiladores.syntacticTree.operators;
 
-import tpcompiladores.conversions.ConversionIntToLong;
-import tpcompiladores.conversions.ConversionMatrix;
-import tpcompiladores.conversions.ConversionMatrixCell;
-import tpcompiladores.conversions.EmptyConversion;
+import tpcompiladores.conversions.*;
 import tpcompiladores.symbolsTable.Type;
 import tpcompiladores.syntacticTree.SyntacticTree;
 import tpcompiladores.syntacticTree.conversions.SyntacticTreeWithConversions;
@@ -12,7 +9,7 @@ public class AssignmentTree extends SyntacticTreeWithConversions {
     private static final ConversionMatrix matrix = new ConversionMatrix();
 
     public AssignmentTree(SyntacticTree leftTree, SyntacticTree rightTree) {
-        super(AssignmentTree.matrix, leftTree, rightTree);
+        super("Asignacion", AssignmentTree.matrix, leftTree, rightTree);
     }
 
     static {

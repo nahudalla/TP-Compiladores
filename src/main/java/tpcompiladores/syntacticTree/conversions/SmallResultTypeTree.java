@@ -10,8 +10,8 @@ import tpcompiladores.syntacticTree.SyntacticTree;
 public class SmallResultTypeTree extends SyntacticTreeWithConversions {
     private static final ConversionMatrix matrix = new ConversionMatrix();
 
-    public SmallResultTypeTree(SyntacticTree leftTree, SyntacticTree rightTree) {
-        super(SmallResultTypeTree.matrix, leftTree, rightTree);
+    public SmallResultTypeTree(String operation, SyntacticTree leftTree, SyntacticTree rightTree) {
+        super(operation, SmallResultTypeTree.matrix, leftTree, rightTree);
     }
 
     static {

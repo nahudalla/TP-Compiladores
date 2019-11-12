@@ -30,7 +30,7 @@ public class Klass {
     }
 
     private void addAttribute (SymbolsTableEntry attribute) {
-        attribute.setUse(SymbolsTableEntryUse.ATTRIBUTE);
+        attribute.changeUse(SymbolsTableEntryUse.ATTRIBUTE);
         attribute.setKlass(this);
         this.attributes.put(attribute.getLexeme(), attribute);
     }
@@ -57,17 +57,37 @@ public class Klass {
     }
 
     public boolean hasMethod (String methodName) {
-        return this.methods.containsKey(methodName);
-    }
+        if (this.methods.containsKey(methodName)) return true;
 
-    public boolean hasAttribute (String attributeName) {
-        for (String attribute : this.attributes.keySet()) {
-            if (attributeName.equals(attribute)) {
+        for (Klass parent : this.extendedClasses) {
+            if (parent.hasMethod(methodName)) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    public boolean hasAttribute (String attributeName) {
+        if (this.attributes.containsKey(attributeName)) return true;
+
+        for (Klass parent : this.extendedClasses) {
+            if (parent.hasAttribute(attributeName)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean hasMember (SymbolsTableEntry entry) {
+        if (entry == null || entry.getUse() == null) return false;
+
+        switch (entry.getUse()) {
+            case ATTRIBUTE: return this.hasAttribute(entry.getLexeme());
+            case METHOD: return this.hasMethod(entry.getLexeme());
+            default: return false;
+        }
     }
 
     @Override

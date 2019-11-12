@@ -2,6 +2,7 @@ package tpcompiladores.symbolsTable;
 
 import java.util.List;
 
+import tpcompiladores.Logger;
 import tpcompiladores.syntacticTree.SyntacticTree;
 
 public class SymbolsTableEntry {
@@ -34,12 +35,30 @@ public class SymbolsTableEntry {
         this.klass = klass;
     }
 
+    public static void setKlass(List<SymbolsTableEntry> entries, Klass klass) {
+        for (SymbolsTableEntry entry : entries) {
+            entry.setKlass(klass);
+        }
+    }
+
+    public boolean isObject () {
+        return SymbolsTableEntryUse.OBJECT.equals(this.getUse());
+    }
+
     public SymbolsTableEntryUse getUse() {
         return this.use;
     }
 
-    public void setUse(SymbolsTableEntryUse use) {
+    public void changeUse(SymbolsTableEntryUse use) {
         this.use = use;
+    }
+
+    public void setUse(SymbolsTableEntryUse use) {
+        if (this.use != null) {
+            Logger.getInstance().logSemanticError(
+                "El identificador '" + this.getLexeme() + "' ya ha sido declarado."
+            );
+        } else this.changeUse(use);
     }
 
     public static void setUse(List<SymbolsTableEntry> entries, SymbolsTableEntryUse use) {

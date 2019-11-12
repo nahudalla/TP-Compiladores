@@ -4,13 +4,13 @@ import tpcompiladores.Logger;
 import tpcompiladores.symbolsTable.SymbolsTableEntry;
 import tpcompiladores.symbolsTable.SymbolsTableEntryUse;
 
-public class MethodCallTree extends LeafTree {
-    public MethodCallTree(SymbolsTableEntry symbolsTableEntry) {
-        super(symbolsTableEntry);
+public class AttributeReferenceTree extends LeafTree {
+    public AttributeReferenceTree(SymbolsTableEntry symbolsTableReference) {
+        super(symbolsTableReference);
 
         if (this.symbolsTableReference == null) return;
 
-        if (!SymbolsTableEntryUse.METHOD.equals(this.symbolsTableReference.getUse())) {
+        if (!SymbolsTableEntryUse.ATTRIBUTE.equals(this.symbolsTableReference.getUse())) {
             String klassNameStr = "";
 
             if (this.symbolsTableReference.getKlass() != null) {
@@ -18,7 +18,7 @@ public class MethodCallTree extends LeafTree {
             }
 
             Logger.getInstance().logSemanticError(
-                "Se esperaba un metodo y se encontro '" +
+                "Se esperaba un atributo y se encontro '" +
                 this.symbolsTableReference.getLexeme() + "'" + klassNameStr +
                 " (uso: "+ this.symbolsTableReference.getUse().name() +")."
             );
@@ -28,7 +28,7 @@ public class MethodCallTree extends LeafTree {
     }
 
     @Override
-    public boolean isReferenceToMethod(){
+    public boolean isReferenceToVariable() {
         return this.symbolsTableReference != null;
     }
 }

@@ -24,36 +24,36 @@ public class ConversionMatrix {
         this.typeToIndex.put(Type.INVALID, 2);
 
         this.setCell(Type.INT, Type.INT, new ConversionMatrixCell(
-                new InvalidConversion(Type.INT),
-                new InvalidConversion(Type.INT),
-                Type.INVALID
+                new EmptyConversion(),
+                new EmptyConversion(),
+                Type.ERROR
         ));
 
         this.setCell(Type.INT, Type.LONG, new ConversionMatrixCell(
-                new InvalidConversion(Type.LONG),
-                new InvalidConversion(Type.INT),
-                Type.INVALID
+                new EmptyConversion(),
+                new EmptyConversion(),
+                Type.ERROR
         ));
 
         this.setCell(Type.LONG, Type.INT, new ConversionMatrixCell(
-                new InvalidConversion(Type.INT),
-                new InvalidConversion(Type.LONG),
-                Type.INVALID
+                new EmptyConversion(),
+                new EmptyConversion(),
+                Type.ERROR
         ));
 
         this.setCell(Type.LONG, Type.LONG, new ConversionMatrixCell(
-                new InvalidConversion(Type.LONG),
-                new InvalidConversion(Type.LONG),
-                Type.INVALID
+                new EmptyConversion(),
+                new EmptyConversion(),
+                Type.ERROR
         ));
 
         Conversion empty = new EmptyConversion();
         ConversionMatrixCell cell = new ConversionMatrixCell(empty, empty, Type.INVALID);
         this.fillPredefinedCells(Type.INVALID, cell);
 
-        Conversion error = new InvalidConversion(null);
-        ConversionMatrixCell errorCell = new ConversionMatrixCell(error, error, Type.INVALID);
-        this.fillPredefinedCells(null, errorCell);
+        Conversion error = new EmptyConversion();
+        ConversionMatrixCell errorCell = new ConversionMatrixCell(error, error, Type.ERROR);
+        this.fillPredefinedCells(Type.ERROR, errorCell);
 
     }
 
