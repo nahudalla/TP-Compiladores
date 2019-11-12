@@ -1,6 +1,9 @@
 package tpcompiladores.syntacticTree;
 
+import java.io.PrintStream;
+
 import tpcompiladores.Logger;
+import tpcompiladores.assembler_generation.Registers;
 import tpcompiladores.symbolsTable.SymbolsTableEntry;
 import tpcompiladores.symbolsTable.SymbolsTableEntryUse;
 
@@ -30,5 +33,10 @@ public class MethodCallTree extends LeafTree {
     @Override
     public boolean isReferenceToMethod(){
         return this.symbolsTableReference != null;
+    }
+
+    @Override
+    public void generateCode(PrintStream printStream, Registers registers) {
+        printStream.println("CALL " + this.symbolsTableReference.getIdentifier());
     }
 }

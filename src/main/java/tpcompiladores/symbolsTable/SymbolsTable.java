@@ -3,6 +3,7 @@ package tpcompiladores.symbolsTable;
 import io.bretty.console.table.Alignment;
 import io.bretty.console.table.ColumnFormatter;
 import io.bretty.console.table.Table;
+import tpcompiladores.assembler_generation.ASMGenerator;
 
 import java.io.PrintStream;
 import java.util.HashMap;
@@ -14,7 +15,14 @@ public class SymbolsTable {
     private final static String STRING_CONSTANT_PREFIX = "STR_CONST_";
     private final static String ID_PREFIX = "ID_";
 
+    private int stringConstantIdentifierNumber = 0;
+    private Map<String, Integer> stringConsantIdentifiers = new HashMap<>();
     private Map<String, SymbolsTableEntry> symbolsTable = new HashMap<>();
+    private ASMGenerator asmGenerator;
+
+    public SymbolsTable(ASMGenerator asmGenerator) {
+        this.asmGenerator = asmGenerator;
+    }
 
     public SymbolsTableEntry getEntry(String key){
         return this.symbolsTable.get(key);
@@ -25,7 +33,18 @@ public class SymbolsTable {
     }
 
     public String addStringConstant(SymbolsTableEntry symbolsTableEntry) {
-        return this.insertIfNotPresent(STRING_CONSTANT_PREFIX, symbolsTableEntry);
+        String identifierKey = symbolsTableEntry.getLexeme();
+        Integer identifierNumber = this.stringConsantIdentifiers.get(identifierKey);
+
+        if (identifierNumber == null) {
+            identifierNumber = this.stringConstantIdentifierNumber++;
+            this.stringConsantIdentifiers.put(identifierKey, identifierNumber);
+        }
+
+        return this.insertIfNotPresentWithKey(
+            STRING_CONSTANT_PREFIX + identifierNumber,
+            symbolsTableEntry
+        );
     }
 
     public String addIdentifier(SymbolsTableEntry symbolsTableEntry) {
@@ -33,10 +52,17 @@ public class SymbolsTable {
     }
 
     private String insertIfNotPresent(String prefix, SymbolsTableEntry symbolsTableEntry){
-        String key = prefix + symbolsTableEntry.getLexeme();
+        return this.insertIfNotPresentWithKey(
+            prefix + symbolsTableEntry.getLexeme(),
+            symbolsTableEntry
+        );
+    }
+
+    private String insertIfNotPresentWithKey(String key, SymbolsTableEntry symbolsTableEntry){
         boolean alreadyInTable = this.symbolsTable.containsKey(key);
 
         if (!alreadyInTable) {
+            this.asmGenerator.addDumpable(symbolsTableEntry);
             symbolsTableEntry.setIdentifier(key);
             this.symbolsTable.put(key, symbolsTableEntry);
         }

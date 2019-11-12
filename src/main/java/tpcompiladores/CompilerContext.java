@@ -1,5 +1,6 @@
 package tpcompiladores;
 
+import tpcompiladores.assembler_generation.ASMGenerator;
 import tpcompiladores.lexer.CharactersRecorder;
 import tpcompiladores.lexer.Lexer;
 import tpcompiladores.lexer.fileInput.CharactersReader;
@@ -12,13 +13,22 @@ public class CompilerContext {
     private CharactersRecorder charactersRecorder;
     private CharactersReader charactersReader;
     private Lexer lexer;
-    private Map<String,Integer> reservedWordsTable;
+    private Map<String, Integer> reservedWordsTable;
     private SymbolsTable symbolsTable;
     private Logger logger;
     private Parser parser;
+    private ASMGenerator asmGenerator;
 
     public Parser getParser() {
         return this.parser;
+    }
+
+    public ASMGenerator getASMGenerator() {
+        return this.asmGenerator;
+    }
+
+    public void setAsmGenerator(ASMGenerator asmGenerator) {
+        this.asmGenerator = asmGenerator;
     }
 
     public void setParser(Parser parser) {

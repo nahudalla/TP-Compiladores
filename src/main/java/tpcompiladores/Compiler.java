@@ -1,5 +1,7 @@
 package tpcompiladores;
 
+import tpcompiladores.assembler_generation.ASMGenerator;
+import tpcompiladores.assembler_generation.ASMMainProgram;
 import tpcompiladores.lexer.CharactersRecorder;
 import tpcompiladores.lexer.Lexer;
 import tpcompiladores.lexer.LineNumber;
@@ -38,6 +40,13 @@ public class Compiler {
         this.context.getLogger().logSyntacticTree(
             result.getSyntacticTree()
         );
+
+        if (result.getCode() != 0 || this.context.getLogger().hasEmittedErrors()) return;
+
+        this.context.getASMGenerator().addDumpable(
+            new ASMMainProgram(result.getSyntacticTree())
+        );
+        this.context.getASMGenerator().generateASM(System.out);
     }
 
     public CompilerContext getContext() {
@@ -47,7 +56,8 @@ public class Compiler {
     private void setupSharedContext(File sourceFile) throws IOException {
         this.context.setCharactersReader(new CharactersReader(sourceFile));
         this.setupLogger();
-        this.context.setSymbolsTable(new SymbolsTable());
+        this.context.setAsmGenerator(new ASMGenerator());
+        this.context.setSymbolsTable(new SymbolsTable(this.context.getASMGenerator()));
     }
 
     private void setupContextForLexer() {
