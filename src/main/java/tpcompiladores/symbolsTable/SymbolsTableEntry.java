@@ -1,11 +1,14 @@
 package tpcompiladores.symbolsTable;
 
+import java.io.PrintStream;
 import java.util.List;
 
 import tpcompiladores.Logger;
+import tpcompiladores.assembler_generation.ASMDumpable;
+import tpcompiladores.assembler_generation.Registers;
 import tpcompiladores.syntacticTree.SyntacticTree;
 
-public class SymbolsTableEntry {
+public class SymbolsTableEntry implements ASMDumpable {
     public static final String[] COLUMN_NAMES = { "Identificador", "Lexema", "Tipo", "Uso" };
 
     private String identifier;
@@ -14,6 +17,56 @@ public class SymbolsTableEntry {
     private SymbolsTableEntryUse use;
     private Klass klass;
     private SyntacticTree tree;
+
+    @Override
+    public void generateData(PrintStream printStream) {
+        switch (this.use) {
+            case CONSTANT: this.dumpConstantToASM(printStream); break;
+            case VARIABLE: this.dumpVariableToASM(printStream); break;
+            case OBJECT: this.dumpObjectToASM(printStream); break;
+            default: break;
+        }
+    }
+
+    private void dumpObjectToASM(PrintStream printStream) {
+        for (SymbolsTableEntry attribute : this.klass.getAttributes()) {
+            attribute.dumpVariableToASM(this.identifier, printStream);
+        }
+    }
+
+    private void dumpVariableToASM(PrintStream printStream) {
+        this.dumpVariableToASM("", printStream);
+    }
+
+    private void dumpVariableToASM(String prefix, PrintStream printStream) {
+        printStream.print(prefix + this.identifier + " ");
+
+        if (Type.INT.equals(this.type)) printStream.print("DW");
+        else if (Type.LONG.equals(this.type)) printStream.print("DD");
+        else throw new Error("Tipo invalido en variable de la tabla de simbolos!!");
+
+        printStream.println(" 0");
+    }
+
+    private void dumpConstantToASM(PrintStream printStream) {
+        if (!Type.STRING.equals(this.type)) return;
+
+        printStream.print(this.identifier);
+        printStream.print(" DB \"");
+        printStream.print(this.lexeme.replaceAll("\"", "\"\""));
+        printStream.println("\", 0");
+    }
+
+    @Override
+    public void generateCode(PrintStream printStream, Registers registers) {
+        if (!SymbolsTableEntryUse.METHOD.equals(this.use)) return;
+        if (this.tree == null) return;
+
+        printStream.println(this.identifier + ":");
+        this.tree.generateCode(printStream, registers);
+        printStream.println();
+        printStream.println("RET");
+    }
 
     public String getIdentifier() {
         return this.identifier;
@@ -41,7 +94,7 @@ public class SymbolsTableEntry {
         }
     }
 
-    public boolean isObject () {
+    public boolean isObject() {
         return SymbolsTableEntryUse.OBJECT.equals(this.getUse());
     }
 
@@ -55,10 +108,9 @@ public class SymbolsTableEntry {
 
     public void setUse(SymbolsTableEntryUse use) {
         if (this.use != null) {
-            Logger.getInstance().logSemanticError(
-                "El identificador '" + this.getLexeme() + "' ya ha sido declarado."
-            );
-        } else this.changeUse(use);
+            Logger.getInstance().logSemanticError("El identificador '" + this.getLexeme() + "' ya ha sido declarado.");
+        } else
+            this.changeUse(use);
     }
 
     public static void setUse(List<SymbolsTableEntry> entries, SymbolsTableEntryUse use) {
@@ -93,30 +145,33 @@ public class SymbolsTableEntry {
         }
     }
 
-    public String[] toTableRow () {
-        return new String[] {
-                this.preprocessFieldValue(this.identifier),
-                this.preprocessFieldValue(this.lexeme),
-                this.preprocessFieldValue(this.type),
-                this.preprocessFieldValue(this.use)
-        };
-    }
-
     private String preprocessFieldValue(SymbolsTableEntryUse value) {
-        if (value == null) return "";
+        if (value == null)
+            return "";
 
         return this.preprocessFieldValue(value.name());
     }
 
     private String preprocessFieldValue(Type value) {
-        if (value == null) return "";
+        if (value == null)
+            return "";
 
         return this.preprocessFieldValue(value.getName());
     }
 
-    private String preprocessFieldValue (String value) {
-        if (value == null) return "";
+    private String preprocessFieldValue(String value) {
+        if (value == null)
+            return "";
 
         return value;
+    }
+
+    public String[] toTableRow() {
+        return new String[] {
+            this.preprocessFieldValue(this.identifier),
+            this.preprocessFieldValue(this.lexeme),
+            this.preprocessFieldValue(this.type),
+            this.preprocessFieldValue(this.use)
+        };
     }
 }

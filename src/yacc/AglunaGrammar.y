@@ -133,8 +133,13 @@ bloque_do_until
 sentencia_print
   : PRINT '(' CONST_STRING ')'
 {
-  $3.tableRef.setUse(SymbolsTableEntryUse.CONSTANT);
+  if ($3.tableRef.getUse() == null) {
+    $3.tableRef.setUse(SymbolsTableEntryUse.CONSTANT);
+    $3.tableRef.setType(Type.STRING);
+  }
+
   $$.tree = new PrintTree(new LeafTree($3.tableRef));
+
   $$.sval = "Print";
 }
   | PRINT error { yyerror("Error en sentencia 'print'"); };

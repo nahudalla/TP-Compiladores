@@ -1,10 +1,12 @@
 package tpcompiladores.syntacticTree;
 
+import tpcompiladores.assembler_generation.ASMDumpable;
+import tpcompiladores.assembler_generation.Registers;
 import tpcompiladores.symbolsTable.Type;
 
 import java.io.PrintStream;
 
-public abstract class SyntacticTree {
+public abstract class SyntacticTree implements ASMDumpable {
     protected SyntacticTree leftTree = null;
     protected SyntacticTree rightTree = null;
 
@@ -58,4 +60,10 @@ public abstract class SyntacticTree {
     public boolean isReferenceToVariable(){
         return false;
     }
+
+    @Override
+    public final void generateData(PrintStream printStream) { }
+
+    @Override
+    public void generateCode(PrintStream printStream, Registers registers) {}
 }

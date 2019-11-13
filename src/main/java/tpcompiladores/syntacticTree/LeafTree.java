@@ -22,7 +22,7 @@ public class LeafTree extends SyntacticTree {
     }
 
     public SymbolsTableEntry getSymbolsTableEntry () {
-        return this.getSymbolsTableEntry();
+        return this.symbolsTableReference;
     }
 
     @Override

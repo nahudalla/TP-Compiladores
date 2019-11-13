@@ -1,5 +1,6 @@
 package tpcompiladores.symbolsTable;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,10 @@ public class Klass {
 
     public Klass(String name) {
         this.name = name;
+    }
+
+    public Collection<SymbolsTableEntry> getAttributes () {
+        return this.attributes.values();
     }
 
     public void setMembers (List<SymbolsTableEntry> members) {
