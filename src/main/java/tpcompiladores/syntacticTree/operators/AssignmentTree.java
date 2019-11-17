@@ -45,13 +45,7 @@ public class AssignmentTree extends SyntacticTreeWithConversions {
         ASMOperationResult rightHandSide = this.rightTree.generateCodeWithResult(printStream, registers);
 
         if (rightHandSide.isInVariable()) {
-            Register tmp;
-
-            if (Type.LONG.equals(this.rightTree.resultType())) {
-                tmp = registers.useRegister32();
-            } else {
-                tmp = registers.useRegister16();
-            }
+            Register tmp = registers.useRegisterForType(this.rightTree.resultType());
 
             printStream.println("MOV " + tmp + ", " + rightHandSide);
             printStream.println("MOV " + leftHandSide + ", " + tmp);

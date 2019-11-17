@@ -114,7 +114,7 @@ public class SymbolsTableEntry implements ASMDumpable {
     }
 
     public void setUse(SymbolsTableEntryUse use) {
-        if (this.use != null) {
+        if (!SymbolsTableEntryUse.CONSTANT.equals(use) && this.use != null) {
             Logger.getInstance().logSemanticError("El identificador '" + this.getLexeme() + "' ya ha sido declarado.");
         } else
             this.changeUse(use);
