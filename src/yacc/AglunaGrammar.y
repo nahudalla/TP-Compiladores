@@ -266,12 +266,12 @@ condicion
   | '(' error ')' { yyerror("Comparacion invalida"); };
 
 comparacion
-  : expresion LESS_OR_EQUAL expresion { $$.tree = new LessOrEqualComparisonTree($1.tree, $3.tree); }
-  | expresion NOT_EQUAL expresion { $$.tree = new NotEqualComparisonTree($1.tree, $3.tree); }
-  | expresion GREATER_OR_EQUAL expresion { $$.tree = new GreaterOrEqualComparisonTree($1.tree, $3.tree); }
-  | expresion EQUALS expresion { $$.tree = new EqualsComparisonTree($1.tree, $3.tree); }
-  | expresion '<' expresion { $$.tree = new LessThanComparisonTree($1.tree, $3.tree); }
-  | expresion '>' expresion { $$.tree = new GreaterThanComparisonTree($1.tree, $3.tree); }
+  : expresion LESS_OR_EQUAL expresion { $$.tree = ComparisonTree.lessOrEquals($1.tree, $3.tree); }
+  | expresion NOT_EQUAL expresion { $$.tree = ComparisonTree.notEquals($1.tree, $3.tree); }
+  | expresion GREATER_OR_EQUAL expresion { $$.tree = ComparisonTree.greaterOrEquals($1.tree, $3.tree); }
+  | expresion EQUALS expresion { $$.tree = ComparisonTree.equals($1.tree, $3.tree); }
+  | expresion '<' expresion { $$.tree = ComparisonTree.less($1.tree, $3.tree); }
+  | expresion '>' expresion { $$.tree = ComparisonTree.greater($1.tree, $3.tree); }
 ;
 
 %%

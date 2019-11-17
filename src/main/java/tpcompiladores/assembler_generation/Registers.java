@@ -2,6 +2,8 @@ package tpcompiladores.assembler_generation;
 
 import java.util.Arrays;
 
+import tpcompiladores.symbolsTable.Type;
+
 public class Registers {
     private final Boolean[] registersUsage = new Boolean[4];
 
@@ -39,6 +41,11 @@ public class Registers {
 
     public Register useRegister16 () {
         return Register.bits16FromIndex(this.useFreeRegister());
+    }
+
+    public Register useRegisterForType (Type type) {
+        if (Type.LONG.equals(type)) return this.useRegister32();
+        else return this.useRegister16();
     }
 
     public Register useSpecialRegister32 () {
