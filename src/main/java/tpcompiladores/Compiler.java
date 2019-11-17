@@ -41,7 +41,13 @@ public class Compiler {
             result.getSyntacticTree()
         );
 
-        if (result.getCode() != 0 || this.context.getLogger().hasEmittedErrors()) return;
+        if (
+            result.getCode() != 0 ||
+            this.context.getLogger().hasEmittedErrors() ||
+            result.getSyntacticTree() == null
+        ) {
+            return;
+        }
 
         this.context.getASMGenerator().addDumpable(
             new ASMMainProgram(result.getSyntacticTree())

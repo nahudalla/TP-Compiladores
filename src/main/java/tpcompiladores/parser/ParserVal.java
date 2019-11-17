@@ -12,6 +12,7 @@ public class ParserVal {
   public String sval = "";
   public SyntacticTree tree;
   public SymbolsTableEntry tableRef;
+  public SymbolsTableEntry objTableRef;
   public Type type;
   public List<SymbolsTableEntry> tableRefs;
 
@@ -21,6 +22,7 @@ public class ParserVal {
     v.bval = this.bval;
     v.ival = this.ival;
     v.sval = this.sval;
+    v.objTableRef = this.objTableRef;
     v.tableRef = this.tableRef;
     v.tableRefs = this.tableRefs;
     v.tree = this.tree;
@@ -53,5 +55,9 @@ public class ParserVal {
 
   public ParserVal(SymbolsTableEntry tableRef) {
     this.tableRef = tableRef;
+  }
+
+  public ParserVal(SymbolsTableEntry tableRef, boolean isObj) {
+    this.objTableRef = tableRef;
   }
 }

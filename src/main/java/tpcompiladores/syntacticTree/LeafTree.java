@@ -1,7 +1,11 @@
 package tpcompiladores.syntacticTree;
 
+import java.io.PrintStream;
+
 import tpcompiladores.Logger;
+import tpcompiladores.assembler_generation.Registers;
 import tpcompiladores.symbolsTable.SymbolsTableEntry;
+import tpcompiladores.symbolsTable.SymbolsTableEntryUse;
 import tpcompiladores.symbolsTable.Type;
 
 public class LeafTree extends SyntacticTree {
@@ -37,5 +41,14 @@ public class LeafTree extends SyntacticTree {
         if (this.symbolsTableReference == null) return Type.INVALID;
 
         return this.symbolsTableReference.getType();
+    }
+
+    @Override
+    public ASMOperationResult generateCodeWithResult (PrintStream printStream, Registers registers) {
+        switch (this.symbolsTableReference.getUse()) {
+            case CONSTANT: return new ASMOperationResult(this.symbolsTableReference);
+            case VARIABLE: return new ASMOperationResult(this.symbolsTableReference.getIdentifier());
+            default: return null;
+        }
     }
 }

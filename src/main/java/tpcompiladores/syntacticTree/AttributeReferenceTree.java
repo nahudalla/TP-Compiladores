@@ -1,12 +1,19 @@
 package tpcompiladores.syntacticTree;
 
+import java.io.PrintStream;
+
 import tpcompiladores.Logger;
+import tpcompiladores.assembler_generation.Registers;
 import tpcompiladores.symbolsTable.SymbolsTableEntry;
 import tpcompiladores.symbolsTable.SymbolsTableEntryUse;
 
 public class AttributeReferenceTree extends LeafTree {
-    public AttributeReferenceTree(SymbolsTableEntry symbolsTableReference) {
-        super(symbolsTableReference);
+    private SymbolsTableEntry objReference;
+
+    public AttributeReferenceTree(SymbolsTableEntry objReference, SymbolsTableEntry attributeReference) {
+        super(attributeReference);
+
+        this.objReference = objReference;
 
         if (this.symbolsTableReference == null) return;
 
@@ -30,5 +37,12 @@ public class AttributeReferenceTree extends LeafTree {
     @Override
     public boolean isReferenceToVariable() {
         return this.symbolsTableReference != null;
+    }
+
+    @Override
+    public ASMOperationResult generateCodeWithResult (PrintStream printStream, Registers registers) {
+        return new ASMOperationResult(
+            this.objReference.generateAttributeIdentifier(this.symbolsTableReference)
+        );
     }
 }

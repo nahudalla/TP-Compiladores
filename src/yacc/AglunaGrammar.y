@@ -226,6 +226,7 @@ declaracion_metodo
 ref_miembro_clase
   : ID capturar_numero_linea '.' ID
 {
+  $$.objTableRef = $1.tableRef;
   $$.tableRef = $4.tableRef;
 
   if (!$1.tableRef.isObject()) {
@@ -238,7 +239,7 @@ ref_miembro_clase
   }
 }
 
-ref_atributo_clase : ref_miembro_clase { $$.tree = new AttributeReferenceTree($1.tableRef); }
+ref_atributo_clase : ref_miembro_clase { $$.tree = new AttributeReferenceTree($1.objTableRef, $1.tableRef); }
 
 asignacion
   : izq_asignacion ASSIGNMENT expresion {

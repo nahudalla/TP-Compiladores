@@ -1,0 +1,14 @@
+long a;
+int b, objID_c;
+
+class Clase begin
+  long c;
+  int d;
+end;
+
+Clase obj;
+
+begin
+  a := b;
+  obj.c := obj.d;
+end

@@ -10,8 +10,10 @@ public class SentenceTree extends SyntacticTree {
     }
 
     @Override
-    public void generateCode(PrintStream printStream, Registers registers) {
+    public ASMOperationResult generateCodeWithResult (PrintStream printStream, Registers registers) {
         if (this.leftTree != null) this.leftTree.generateCode(printStream, registers);
         if (this.rightTree != null) this.rightTree.generateCode(printStream, registers);
+
+        return null;
     }
 }
