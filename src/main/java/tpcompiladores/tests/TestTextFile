@@ -1,4 +1,13 @@
-This is a test text file.
-Second line.
-Third line.
-Fourth and last.
+class A begin
+ int a;
+
+  void metodoA() begin end;
+end;
+
+class A begin
+ int b;
+end;
+
+begin
+print({asd});
+end

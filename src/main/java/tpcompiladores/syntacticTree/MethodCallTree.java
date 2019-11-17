@@ -36,7 +36,9 @@ public class MethodCallTree extends LeafTree {
     }
 
     @Override
-    public void generateCode(PrintStream printStream, Registers registers) {
+    public ASMOperationResult generateCodeWithResult (PrintStream printStream, Registers registers) {
         printStream.println("CALL " + this.symbolsTableReference.getIdentifier());
+
+        return null;
     }
 }

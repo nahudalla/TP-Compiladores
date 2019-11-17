@@ -5,9 +5,9 @@ public enum Register {
     // eliminar o agregar nuevos sin adaptar los métodos de abajo.
 
     // 32-bit
-    EAX, EBX, ECX, EDX,
+    EBX, ECX, EDX, EAX,
     // 16-bit
-    AX, BX, CX, DX;
+    BX, CX, DX, AX;
 
     public int getIndex () {
         return this.ordinal() % 4;
@@ -19,5 +19,9 @@ public enum Register {
 
     public static Register bits16FromIndex (int index) {
         return Register.values()[(index % 4) + 4];
+    }
+
+    public Register toRegister32 () {
+        return Register.values()[this.ordinal() % 4];
     }
 }

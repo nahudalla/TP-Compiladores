@@ -1,6 +1,7 @@
 package tpcompiladores.syntacticTree;
 
 import tpcompiladores.assembler_generation.ASMDumpable;
+import tpcompiladores.assembler_generation.Register;
 import tpcompiladores.assembler_generation.Registers;
 import tpcompiladores.symbolsTable.Type;
 
@@ -45,7 +46,7 @@ public abstract class SyntacticTree implements ASMDumpable {
         return null;
     }
 
-    public boolean isLeaf(){
+    public final boolean isLeaf(){
         return this.leftTree == null && this.rightTree == null;
     }
 
@@ -65,5 +66,9 @@ public abstract class SyntacticTree implements ASMDumpable {
     public final void generateData(PrintStream printStream) { }
 
     @Override
-    public void generateCode(PrintStream printStream, Registers registers) {}
+    public final void generateCode(PrintStream printStream, Registers registers) {
+        this.generateCodeWithResult(printStream, registers);
+    }
+
+    public ASMOperationResult generateCodeWithResult (PrintStream printStream, Registers registers) { return null; }
 }

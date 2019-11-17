@@ -14,9 +14,11 @@ public class PrintTree extends SyntacticTree {
     }
 
     @Override
-    public void generateCode(PrintStream printStream, Registers registers) {
+    public ASMOperationResult generateCodeWithResult (PrintStream printStream, Registers registers) {
         String strIdentifier = this.getStringConstantTree().getSymbolsTableEntry().getIdentifier();
 
         printStream.println("invoke MessageBox, NULL, addr " + strIdentifier + ", addr " + strIdentifier + ", MB_OK");
+
+        return null;
     }
 }

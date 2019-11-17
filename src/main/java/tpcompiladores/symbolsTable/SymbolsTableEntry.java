@@ -28,18 +28,25 @@ public class SymbolsTableEntry implements ASMDumpable {
         }
     }
 
+    public String generateAttributeIdentifier (SymbolsTableEntry attributeReference) {
+        return this.identifier + "#" + attributeReference.identifier;
+    }
+
     private void dumpObjectToASM(PrintStream printStream) {
         for (SymbolsTableEntry attribute : this.klass.getAttributes()) {
-            attribute.dumpVariableToASM(this.identifier, printStream);
+            attribute.dumpVariableToASM(
+                this.generateAttributeIdentifier(attribute),
+                printStream
+            );
         }
     }
 
     private void dumpVariableToASM(PrintStream printStream) {
-        this.dumpVariableToASM("", printStream);
+        this.dumpVariableToASM(this.identifier, printStream);
     }
 
-    private void dumpVariableToASM(String prefix, PrintStream printStream) {
-        printStream.print(prefix + this.identifier + " ");
+    private void dumpVariableToASM(String identifier, PrintStream printStream) {
+        printStream.print(identifier + " ");
 
         if (Type.INT.equals(this.type)) printStream.print("DW");
         else if (Type.LONG.equals(this.type)) printStream.print("DD");
