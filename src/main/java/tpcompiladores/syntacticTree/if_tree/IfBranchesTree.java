@@ -7,8 +7,6 @@ import tpcompiladores.syntacticTree.ASMOperationResult;
 import tpcompiladores.syntacticTree.SyntacticTree;
 
 public class IfBranchesTree extends SyntacticTree {
-    private static int labelCounter = 0;
-
     public IfBranchesTree(IfThenBranchTree ifThenBranchTree, IfElseBranchTree ifElseBranchTree) {
         super(ifThenBranchTree, ifElseBranchTree);
     }
@@ -23,8 +21,6 @@ public class IfBranchesTree extends SyntacticTree {
 
     @Override
     public ASMOperationResult generateCodeWithResult (PrintStream printStream, Registers registers) {
-        IfTree.jumpLabels.push("IfElseBranchEnd_" + labelCounter++);
-
         this.getThenTree().generateCodeWithResult(printStream, registers);
         this.getElseTree().generateCodeWithResult(printStream, registers);
 
