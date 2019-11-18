@@ -55,9 +55,7 @@ public class AssignmentTree extends SyntacticTreeWithConversions {
             printStream.println("MOV " + leftHandSide + ", " + rightHandSide);
         }
 
-        if (rightHandSide.isInRegister()) {
-            registers.freeRegister(rightHandSide.getRegister());
-        }
+        registers.freeRegister(rightHandSide.getRegister());
 
         return null;
     }

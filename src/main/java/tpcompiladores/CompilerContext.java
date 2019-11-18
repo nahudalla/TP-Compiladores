@@ -10,6 +10,13 @@ import tpcompiladores.symbolsTable.SymbolsTable;
 import java.util.Map;
 
 public class CompilerContext {
+    private static final CompilerContext instance = new CompilerContext();
+    private CompilerContext () {}
+
+    public static CompilerContext getInstance () {
+        return CompilerContext.instance;
+    }
+
     private CharactersRecorder charactersRecorder;
     private CharactersReader charactersReader;
     private Lexer lexer;
