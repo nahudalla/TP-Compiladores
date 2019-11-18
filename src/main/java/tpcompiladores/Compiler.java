@@ -19,7 +19,7 @@ public class Compiler {
     private CompilerContext context;
 
     public Compiler (File sourceFile) throws IOException {
-        this.context = new CompilerContext();
+        this.context = CompilerContext.getInstance();
 
         this.setupSharedContext(sourceFile);
         this.setupContextForLexer();

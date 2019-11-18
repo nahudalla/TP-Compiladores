@@ -56,17 +56,17 @@ public class Registers {
         return Register.bits16FromIndex(this.useFreeSpecialRegister());
     }
 
-    public Register useAXRegister () {
-        int index = this.registersUsage.length-1;
+    public void useRegister (Register register) {
+        if (this.registersUsage[register.getIndex()]) {
+            throw new Error("El registro " + register + " ya esta siendo usado!!");
+        }
 
-        if (this.registersUsage[index]) throw new Error("El registro AX ya esta siendo usado!!");
-
-        this.registersUsage[index] = true;
-
-        return Register.bits16FromIndex(index);
+        this.registersUsage[register.getIndex()] = true;
     }
 
     public void freeRegister (Register register) {
+        if (register == null) return;
+
         this.registersUsage[register.getIndex()] = false;
     }
 

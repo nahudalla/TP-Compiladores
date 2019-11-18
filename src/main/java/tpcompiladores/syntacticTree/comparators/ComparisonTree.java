@@ -46,20 +46,19 @@ public class ComparisonTree extends SmallResultTypeTree {
         ASMOperationResult leftHandSide = this.leftTree.generateCodeWithResult(printStream, registers);
         ASMOperationResult rightHandSide = this.rightTree.generateCodeWithResult(printStream, registers);
 
-        Register tmpRegister = null;
-
         if (
             leftHandSide.isConstant() ||
             (leftHandSide.isInVariable() && rightHandSide.isInVariable())
         ) {
-            tmpRegister = registers.useRegisterForType(this.leftTree.resultType());
+            Register tmpRegister = registers.useRegisterForType(this.leftTree.resultType());
             printStream.println("MOV " + tmpRegister + ", " + leftHandSide);
             leftHandSide = new ASMOperationResult(tmpRegister);
         }
 
         printStream.println("CMP " + leftHandSide + ", " + rightHandSide);
 
-        if (tmpRegister != null) registers.freeRegister(tmpRegister);
+        registers.freeRegister(leftHandSide.getRegister());
+        registers.freeRegister(rightHandSide.getRegister());
 
         return ASMOperationResult.incompleteJump(this.jumpStr);
     }
