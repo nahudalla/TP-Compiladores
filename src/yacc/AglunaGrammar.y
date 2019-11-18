@@ -250,7 +250,12 @@ asignacion
   | izq_asignacion ASSIGNMENT error { yyerror("Error en parte derecha de asignacion."); };
 
 izq_asignacion
-  : ID { $$.tree = new LeafTree($1.tableRef); }
+  : ID
+{
+  if ($1.tableRef.getUse() != SymbolsTableEntryUse.VARIABLE)
+    yyerror("El atributo " + $1.tableRef.getLexeme() + " no está referenciado correctamente.");
+  $$.tree = new LeafTree($1.tableRef);
+}
   | ref_atributo_clase ;
 
 llamada_metodo_clase
