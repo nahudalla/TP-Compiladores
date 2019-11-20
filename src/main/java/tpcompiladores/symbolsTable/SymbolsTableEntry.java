@@ -29,7 +29,7 @@ public class SymbolsTableEntry implements ASMDumpable {
     }
 
     public String generateAttributeIdentifier (SymbolsTableEntry attributeReference) {
-        return this.identifier + "#" + attributeReference.identifier;
+        return this.identifier + "@" + attributeReference.identifier;
     }
 
     private void dumpObjectToASM(PrintStream printStream) {
