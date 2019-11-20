@@ -4,6 +4,7 @@ package tpcompiladores;
 import tpcompiladores.parser.yacc_generated.Parser;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class Main {
@@ -13,14 +14,19 @@ public class Main {
         String fileName = Main.getFileNameFromArgs(args);
         String specialCommand = Main.getSpecialCommandFromArgs(args);
 
-        if (specialCommand != null) {
-            Main.runSpecialCommand(specialCommand, fileName);
-        } else {
-            Main.runCompilation(fileName);
+        try {
+            if (specialCommand != null) {
+                Main.runSpecialCommand(specialCommand, fileName);
+            } else {
+                Main.runCompilation(fileName);
+            }
+        } catch (FileNotFoundException e) {
+            System.err.println(e.getMessage());
+            System.exit(1);
         }
     }
 
-    private static String getSpecialCommandFromArgs (String[] args) {
+    private static String getSpecialCommandFromArgs(String[] args) {
         for (int i = 0; i < args.length; i++) {
             if (args[i].startsWith("--")) {
                 return args[i];
@@ -30,7 +36,7 @@ public class Main {
         return null;
     }
 
-    private static String getFileNameFromArgs (String[] args) {
+    private static String getFileNameFromArgs(String[] args) {
         for (int i = 0; i < args.length; i++) {
             if (!args[i].startsWith("--")) {
                 return args[i];
@@ -40,11 +46,11 @@ public class Main {
         return null;
     }
 
-    private static void runCompilation(String fileName) {
+    private static void runCompilation(String fileName) throws FileNotFoundException {
         Main.runCompilation(false, fileName);
     }
 
-    private static void runCompilation (boolean verbose, String fileName) {
+    private static void runCompilation(boolean verbose, String fileName) throws FileNotFoundException {
         File sourceFile;
 
         if (fileName != null) {
@@ -67,7 +73,7 @@ public class Main {
         Main.setExitCodeIfErrorsEmitted(compiler);
     }
 
-    private static void runSpecialCommand(String command, String fileName) {
+    private static void runSpecialCommand(String command, String fileName) throws FileNotFoundException {
         switch (command) {
             case "--transitions": Compiler.printStateTransitionMatrix(); break;
             case "--verbose": Main.runCompilation(true, fileName); break;

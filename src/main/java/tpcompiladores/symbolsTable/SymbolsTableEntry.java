@@ -9,14 +9,43 @@ import tpcompiladores.assembler_generation.Registers;
 import tpcompiladores.syntacticTree.SyntacticTree;
 
 public class SymbolsTableEntry implements ASMDumpable {
-    public static final String[] COLUMN_NAMES = { "Identificador", "Lexema", "Tipo", "Uso" };
-
     private String identifier;
     private String lexeme;
     private Type type;
     private SymbolsTableEntryUse use;
     private Klass klass;
     private SyntacticTree tree;
+
+    public void print(int indentation, PrintStream stream) {
+        String spaces = "";
+        for (int i = 0; i < indentation; i++) {
+            spaces += " ";
+        }
+
+        stream.print(spaces);
+        stream.println("Lexeme: " + lexeme);
+
+        stream.print(spaces);
+        stream.println("Type: " + type);
+
+        stream.print(spaces);
+        stream.println("Uso: " + use);
+
+        stream.print(spaces);
+        stream.print("Clase: ");
+
+        if (SymbolsTableEntryUse.CLASS.equals(use)) {
+            stream.println();
+            klass.print(indentation + 2, stream);
+        } else {
+            stream.println(klass);
+        }
+
+        if (tree != null) {
+            stream.print(spaces);
+            stream.println("Ver arbol sintactico mas abajo");
+        }
+	}
 
     @Override
     public void generateData(PrintStream printStream) {
@@ -150,35 +179,5 @@ public class SymbolsTableEntry implements ASMDumpable {
         for (SymbolsTableEntry entry : entries) {
             entry.setType(type);
         }
-    }
-
-    private String preprocessFieldValue(SymbolsTableEntryUse value) {
-        if (value == null)
-            return "";
-
-        return this.preprocessFieldValue(value.name());
-    }
-
-    private String preprocessFieldValue(Type value) {
-        if (value == null)
-            return "";
-
-        return this.preprocessFieldValue(value.getName());
-    }
-
-    private String preprocessFieldValue(String value) {
-        if (value == null)
-            return "";
-
-        return value;
-    }
-
-    public String[] toTableRow() {
-        return new String[] {
-            this.preprocessFieldValue(this.identifier),
-            this.preprocessFieldValue(this.lexeme),
-            this.preprocessFieldValue(this.type),
-            this.preprocessFieldValue(this.use)
-        };
     }
 }

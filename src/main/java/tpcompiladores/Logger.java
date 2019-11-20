@@ -157,10 +157,16 @@ public class Logger {
         this.logError("SEMANTIC", message);
     }
 
-	public void logSyntacticTree(SyntacticTree syntacticTree) {
+    public void logSyntacticTree(SyntacticTree syntacticTree) {
+        this.logSyntacticTree("", syntacticTree);
+    }
+
+	public void logSyntacticTree(String name, SyntacticTree syntacticTree) {
         if (this.hasEmittedErrors()) return;
 
-        this.logResultsSectionHeader("ARBOL SINTACTICO");
+        if (name.length() > 0) name = " (" + name + ")";
+
+        this.logResultsSectionHeader("ARBOL SINTACTICO" + name);
 
         if (syntacticTree == null) System.out.println("ARBOL VACIO");
         else syntacticTree.print(System.out);

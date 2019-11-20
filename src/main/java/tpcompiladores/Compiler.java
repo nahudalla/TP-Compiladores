@@ -13,12 +13,14 @@ import tpcompiladores.parser.yacc_generated.Parser;
 import tpcompiladores.symbolsTable.SymbolsTable;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintStream;
 
 public class Compiler {
     private CompilerContext context;
 
-    public Compiler (File sourceFile) throws IOException {
+    public Compiler(File sourceFile) throws IOException {
         this.context = CompilerContext.getInstance();
 
         this.setupSharedContext(sourceFile);
@@ -26,7 +28,7 @@ public class Compiler {
         this.setupContextForParser();
     }
 
-    public void run () {
+    public void run() throws FileNotFoundException {
         ParsingResult result = this.context.getParser().parse();
 
         if (result.getCode() != 0) {
@@ -38,8 +40,11 @@ public class Compiler {
         );
 
         this.context.getLogger().logSyntacticTree(
+            "programa principal",
             result.getSyntacticTree()
         );
+
+        CompilerContext.getInstance().getSymbolsTable().printMethodTrees();
 
         if (
             result.getCode() != 0 ||
@@ -52,7 +57,12 @@ public class Compiler {
         this.context.getASMGenerator().addDumpable(
             new ASMMainProgram(result.getSyntacticTree())
         );
-        this.context.getASMGenerator().generateASM(System.out);
+
+        File outFile = FileChooser.showFileSave("Seleccione donde guardar el assembler.");
+
+        this.context.getASMGenerator().generateASM(
+            new PrintStream(outFile)
+        );
     }
 
     public CompilerContext getContext() {

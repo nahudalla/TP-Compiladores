@@ -1,7 +1,10 @@
 package tpcompiladores.symbolsTable;
 
+import java.io.PrintStream;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -11,6 +14,55 @@ public class Klass {
     private Map<String, SymbolsTableEntry> attributes = new HashMap<>();
     private Map<String, SymbolsTableEntry> methods = new HashMap<>();
     private Klass[] extendedClasses = new Klass[0];
+
+	public void print(int indentation, PrintStream stream) {
+        String spaces = "";
+        for (int i = 0; i < indentation; i++) {
+            spaces += " ";
+        }
+
+        stream.print(spaces);
+        stream.println("Name: " + name);
+
+        stream.print(spaces);
+        stream.print("Atributos: ");
+
+        Iterator<SymbolsTableEntry> it = attributes.values().iterator();
+
+        while (it.hasNext()) {
+            stream.print(it.next().getLexeme());
+
+            if (it.hasNext()) stream.print(", ");
+        }
+
+        stream.println();
+
+        stream.print(spaces);
+        stream.print("Metodos: ");
+
+        Iterator<SymbolsTableEntry> it2 = methods.values().iterator();
+
+        while (it2.hasNext()) {
+            stream.print(it2.next().getLexeme());
+
+            if (it2.hasNext()) stream.print(", ");
+        }
+
+        stream.println();
+
+        stream.print(spaces);
+        stream.print("Clases extendidas: ");
+
+        Iterator<Klass> it3 = Arrays.asList(extendedClasses).iterator();
+
+        if (!it3.hasNext()) stream.println("ninguna");
+
+        while (it3.hasNext()) {
+            stream.print(it3.next().getName());
+
+            if (it3.hasNext()) stream.print(", ");
+        }
+    }
 
     public Klass(String name) {
         this.name = name;
@@ -110,5 +162,10 @@ public class Klass {
 
 	public String getName() {
 		return this.name;
-	}
+    }
+
+    @Override
+    public String toString () {
+        return this.name;
+    }
 }
