@@ -59,6 +59,8 @@ tipo_var
 declaracion_objeto
   : capturar_numero_linea ID lista_identificadores
 {
+  if ($2.tableRef.getUse() == null)
+    yyerror("La clase '" + $2.tableRef.getLexeme() + "' no ha sido declarada.");
   SymbolsTableEntry.setUse($3.tableRefs, SymbolsTableEntryUse.OBJECT);
   SymbolsTableEntry.setType($3.tableRefs, new Type($2.tableRef.getLexeme()));
   SymbolsTableEntry.setKlass($3.tableRefs, $2.tableRef.getKlass());
