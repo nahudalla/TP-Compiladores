@@ -58,11 +58,19 @@ public class Compiler {
             new ASMMainProgram(result.getSyntacticTree())
         );
 
-        File outFile = FileChooser.showFileSave("Seleccione donde guardar el assembler.");
+        File outFile = null;
 
-        this.context.getASMGenerator().generateASM(
-            new PrintStream(outFile)
-        );
+        try {
+            outFile = FileChooser.showFileSave("Seleccione donde guardar el assembler.");
+        } catch (Exception e) {}
+
+        PrintStream printStream;
+
+        if (outFile == null) {
+            printStream = System.out;
+        } else printStream = new PrintStream(outFile);
+
+        this.context.getASMGenerator().generateASM(printStream);
     }
 
     public CompilerContext getContext() {

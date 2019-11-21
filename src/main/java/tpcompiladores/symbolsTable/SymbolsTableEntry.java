@@ -49,6 +49,8 @@ public class SymbolsTableEntry implements ASMDumpable {
 
     @Override
     public void generateData(PrintStream printStream) {
+        if (this.use == null) return;
+
         switch (this.use) {
             case CONSTANT: this.dumpConstantToASM(printStream); break;
             case VARIABLE: this.dumpVariableToASM(printStream); break;
