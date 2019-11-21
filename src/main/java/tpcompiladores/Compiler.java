@@ -60,6 +60,11 @@ public class Compiler {
 
         File outFile = FileChooser.showFileSave("Seleccione donde guardar el assembler.");
 
+        if (outFile == null) {
+            Logger.getInstance().logMessage("Guardado de assembler cancelado");
+            System.exit(0);
+        }
+
         this.context.getASMGenerator().generateASM(
             new PrintStream(outFile)
         );

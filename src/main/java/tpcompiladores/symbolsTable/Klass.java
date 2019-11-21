@@ -4,10 +4,12 @@ import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 public class Klass {
     private String name;
@@ -69,7 +71,13 @@ public class Klass {
     }
 
     public Collection<SymbolsTableEntry> getAttributes () {
-        return this.attributes.values();
+        Set<SymbolsTableEntry> attributes = new HashSet<>(this.attributes.values());
+
+        for (Klass parent : this.extendedClasses) {
+            attributes.addAll(parent.getAttributes());
+        }
+
+        return attributes;
     }
 
     public void setMembers (List<SymbolsTableEntry> members) {
