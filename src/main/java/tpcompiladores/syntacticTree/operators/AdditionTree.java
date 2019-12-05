@@ -36,6 +36,7 @@ public class AdditionTree extends SmallResultTypeTree {
         }
 
         printStream.println("ADD " + lhsResult + ", " + rhsResult);
+
         printStream.println("JO " + AdditionOverflow.label);
 
         registers.freeRegister(rhsResult.getRegister());

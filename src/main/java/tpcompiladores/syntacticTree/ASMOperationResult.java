@@ -4,12 +4,13 @@ import tpcompiladores.assembler_generation.Register;
 import tpcompiladores.symbolsTable.SymbolsTableEntry;
 
 public class ASMOperationResult {
-    private final Register register;
+    private Register register;
     private final String variableIdentifier;
     private final String constantLexeme;
     private final String incompleteJump;
 
     public ASMOperationResult (Register register) {
+        register.setASMOperationResult(this);
         this.register = register;
         this.variableIdentifier = null;
         this.constantLexeme = null;
@@ -35,6 +36,11 @@ public class ASMOperationResult {
         this.variableIdentifier = null;
         this.constantLexeme = null;
         this.incompleteJump = incompleteJump;
+    }
+
+    public void setRegister (Register register) {
+        register.setASMOperationResult(this);
+        this.register = register;
     }
 
     public Register getRegister () {
