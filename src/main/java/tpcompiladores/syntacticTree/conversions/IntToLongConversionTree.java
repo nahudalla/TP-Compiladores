@@ -25,30 +25,20 @@ public class IntToLongConversionTree extends SyntacticTree {
 
         if (result.isConstant()) {
             Register resultRegister = registers.useRegister32();
+
             printStream.println("MOV " + resultRegister + ", " + result);
+
             return new ASMOperationResult(resultRegister);
         } else if (!Register.AX.equals(result.getRegister())){
-            Register extendedResult;
-
-            if (result.isInRegister()) {
-                extendedResult = result.getRegister().toRegister32();
-            } else {
-                extendedResult = registers.useRegister32();
-            }
-
-            registers.useRegister(Register.AX);
+            registers.forceUseRegister(Register.AX, printStream);
 
             printStream.println("MOV " + Register.AX + ", " + result);
-            printStream.println("CWDE");
-            printStream.println("MOV " + extendedResult + ", " + Register.EAX);
 
-            registers.freeRegister(Register.AX);
-
-            return new ASMOperationResult(extendedResult);
-        } else {
-            printStream.println("CWDE");
-
-            return new ASMOperationResult(Register.EAX);
+            registers.freeRegister(result.getRegister());
         }
+
+        printStream.println("CWDE");
+
+        return new ASMOperationResult(Register.EAX);
     }
 }

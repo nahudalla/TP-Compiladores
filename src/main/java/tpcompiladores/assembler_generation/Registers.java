@@ -1,8 +1,10 @@
 package tpcompiladores.assembler_generation;
 
+import java.io.PrintStream;
 import java.util.Arrays;
 
 import tpcompiladores.symbolsTable.Type;
+import tpcompiladores.syntacticTree.ASMOperationResult;
 
 public class Registers {
     private final Boolean[] registersUsage = new Boolean[4];
@@ -43,6 +45,11 @@ public class Registers {
         return Register.bits16FromIndex(this.useFreeRegister());
     }
 
+    public Register useSameWidthRegister (Register register) {
+        if (register.is16BitRegister()) return this.useRegister16();
+        else return this.useRegister32();
+    }
+
     public Register useRegisterForType (Type type) {
         if (Type.LONG.equals(type)) return this.useRegister32();
         else return this.useRegister16();
@@ -76,5 +83,18 @@ public class Registers {
 
     public boolean isFree (Register register) {
         return !this.isUsed(register);
+    }
+
+    public void forceUseRegister (Register requiredRegister, PrintStream printStream) {
+        if (this.isFree(requiredRegister)) {
+            this.useRegister(requiredRegister);
+        } else {
+            ASMOperationResult operationResult = requiredRegister.getASMOperationResult();
+            Register newRegister = this.useSameWidthRegister(operationResult.getRegister());
+
+            printStream.println("MOV " + newRegister + ", " + operationResult.getRegister());
+
+            operationResult.setRegister(newRegister);
+        }
     }
 }

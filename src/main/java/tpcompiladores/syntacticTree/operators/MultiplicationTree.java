@@ -50,20 +50,14 @@ public class MultiplicationTree extends SyntacticTreeWithConversions {
         ASMOperationResult lhsResult = this.leftTree.generateCodeWithResult(printStream, registers);
         ASMOperationResult rhsResult = this.rightTree.generateCodeWithResult(printStream, registers);
 
-        registers.useRegister(Register.EDX);
-
         if (!Register.EAX.equals(lhsResult.getRegister())) {
-            if (Register.EAX.equals(rhsResult.getRegister())) {
-                ASMOperationResult tmp = lhsResult;
-                lhsResult = rhsResult;
-                rhsResult = tmp;
-            } else {
-                registers.useRegister(Register.EAX);
-                printStream.println("MOV " + Register.EAX + ", " + lhsResult);
-                registers.freeRegister(lhsResult.getRegister());
-                lhsResult = new ASMOperationResult(Register.EAX);
-            }
+            registers.forceUseRegister(Register.EAX, printStream);
+            printStream.println("MOV " + Register.EAX + ", " + lhsResult);
+            registers.freeRegister(lhsResult.getRegister());
+            lhsResult = new ASMOperationResult(Register.EAX);
         }
+
+        registers.forceUseRegister(Register.EDX, printStream);
 
         printStream.println("IMUL " + lhsResult + ", " + rhsResult);
 

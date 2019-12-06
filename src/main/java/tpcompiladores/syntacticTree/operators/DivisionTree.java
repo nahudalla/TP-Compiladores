@@ -69,27 +69,23 @@ public class DivisionTree extends SmallResultTypeTree {
         ASMOperationResult lhsResult = this.leftTree.generateCodeWithResult(printStream, registers);
         ASMOperationResult rhsResult = this.rightTree.generateCodeWithResult(printStream, registers);
 
-        registers.useRegister(xdx);
-
-        if (xax.equals(rhsResult.getRegister())) {
-            Register tmp = registers.useRegisterForType(this.rightTree.resultType());
-            printStream.println("MOV " + tmp + ", " + xax);
-            registers.freeRegister(xax);
-            rhsResult = new ASMOperationResult(tmp);
-        } else if (rhsResult.isConstant()) {
+        if (rhsResult.isConstant()) {
             Register tmp = registers.useRegisterForType(this.rightTree.resultType());
             printStream.println("MOV " + tmp + ", " + rhsResult);
             rhsResult = new ASMOperationResult(tmp);
         }
 
         if (!xax.equals(lhsResult.getRegister())) {
-            registers.useRegister(xax);
+            registers.forceUseRegister(xax, printStream);
             printStream.println("MOV " + xax + ", " + lhsResult);
             registers.freeRegister(lhsResult.getRegister());
             lhsResult = new ASMOperationResult(xax);
         }
 
         printStream.println("CWD");
+
+        registers.forceUseRegister(xdx, printStream);
+
         printStream.println("IDIV " + rhsResult);
 
         registers.freeRegister(rhsResult.getRegister());
